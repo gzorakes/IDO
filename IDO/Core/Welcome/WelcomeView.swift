@@ -8,20 +8,72 @@
 import SwiftUI
 
 struct WelcomeView: View {
+    
+    @State var imageName: String = Constants.randomImage
+    
     var body: some View {
         NavigationStack {
-            VStack {
-                Text("Welcome!")
-                    .frame(maxHeight: .infinity)
+            VStack(spacing: 8.0) {
+                ImageLoaderView(urlString: imageName)
+                    .ignoresSafeArea()
                 
-                NavigationLink {
-                    OnboardingCompletedView()
-                } label: {
-                    Text("Get Started")
-                        .callToActionButton()
-                }
+                titleSection
+                    .padding(.top, 24)
+                    .fontDesign(.rounded)
+                
+                ctaButtons
+                    .padding(16)
+                
+                policyLinks
             }
-            .padding(16)
+        }
+    }
+    
+    private var titleSection: some View {
+        VStack {
+            Text("Yes I Do! 💍")
+                .font(.largeTitle)
+                .fontWeight(.semibold)
+                .foregroundStyle(.accent)
+            
+            Text("by George Zorakis")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            
+        }
+    }
+    
+    private var ctaButtons: some View {
+        VStack {
+            NavigationLink {
+                OnboardingCompletedView()
+            } label: {
+                Text("Get Started")
+                    .callToActionButton()
+            }
+            
+            Text("Already have an account? Sign in!")
+                .underline()
+                .font(.body)
+                .padding(8)
+                .tappableBackground()
+                .onTapGesture {
+                    
+                }
+        }
+    }
+    
+    private var policyLinks: some View {
+        HStack(spacing: 8) {
+            Link(destination: URL(string: Constants.termsOfServiceUrl)!) {
+                Text("Terms of Service")
+            }
+            Circle()
+                .fill(.accent)
+                .frame(width: 4, height: 4)
+            Link(destination: URL(string: Constants.privacyPolicyUrl)!) {
+                Text("Privacy Policy")
+            }
         }
     }
 }
