@@ -45,14 +45,8 @@ struct WelcomeView: View {
     
     private var ctaButtons: some View {
         VStack {
-            NavigationLink {
-                OnboardingCompletedView()
-            } label: {
-                Text("Get Started")
-                    .callToActionButton()
-            }
-            
             Text("Already have an account? Sign in!")
+                .foregroundStyle(.accent)
                 .underline()
                 .font(.body)
                 .padding(8)
@@ -60,6 +54,12 @@ struct WelcomeView: View {
                 .onTapGesture {
                     
                 }
+            NavigationLink {
+                OnboardingIntroView()
+            } label: {
+                Text("Get Started")
+                    .callToActionButton()
+            }
         }
     }
     
