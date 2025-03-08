@@ -14,7 +14,9 @@ struct WelcomeView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 8.0) {
-                ImageLoaderView(urlString: imageName)
+                Image("rings")
+                    .resizable()
+                    .scaledToFill()
                     .ignoresSafeArea()
                 
                 titleSection
