@@ -10,13 +10,14 @@ import SwiftUI
 struct HeroCellView: View {
     
     var title: String? = "This is the title"
-    var subtitle: String? = "This is the subtitle that will go here"
-    var imageName: String? = Constants.randomImage
+    var imageName: String? = "rings"
     
     var body: some View {
         ZStack {
             if let imageName {
-                ImageLoaderView(urlString: imageName)
+                Image(imageName)
+                    .resizable()
+                    .scaledToFit()
             } else {
                 Rectangle()
                     .fill(.accent)
@@ -25,14 +26,10 @@ struct HeroCellView: View {
         .overlay(
             alignment: .bottomLeading,
             content: {
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading) {
                     if let title {
                         Text(title)
                             .font(.headline)
-                    }
-                    if let subtitle {
-                        Text(subtitle)
-                            .font(.subheadline)
                     }
                 }
                 .foregroundStyle(.white)
@@ -72,8 +69,6 @@ struct HeroCellView: View {
             HeroCellView(title: nil)
                 .frame(width: 300, height: 200)
             
-            HeroCellView(subtitle: nil)
-                .frame(width: 300, height: 200)
         }
         .frame(maxWidth: .infinity)
     }

@@ -14,7 +14,7 @@ struct WelcomeView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 8.0) {
-                Image("rings")
+                Image("welcomephoto")
                     .resizable()
                     .scaledToFill()
                     .ignoresSafeArea()
