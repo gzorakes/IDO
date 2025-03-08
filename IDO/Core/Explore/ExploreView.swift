@@ -8,10 +8,40 @@
 import SwiftUI
 
 struct ExploreView: View {
+    
+    @State private var categories: [CategoryModel] = CategoryModel.allCategories
+    
     var body: some View {
         NavigationStack {
-            Text("Explore")
-                .navigationTitle("Explore")
+            List {
+                categorySection
+                
+                
+            }
+            .navigationTitle("Explore")
+        }
+    }
+    
+    private var categorySection: some View {
+        Section {
+            ZStack {
+                ScrollView(.horizontal) {
+                    HStack(spacing: 12) {
+                        ForEach(categories) { category in
+                            CategoryCellView(
+                                title: category.title,
+                                imageName: category.imageName
+                            )
+                        }
+                    }
+                }
+                .scrollIndicators(.hidden)
+                .scrollTargetLayout()
+                .scrollTargetBehavior(.viewAligned)
+            }
+            .removeListRowFormatting()
+        } header: {
+            Text("Categories")
         }
     }
 }
@@ -19,3 +49,18 @@ struct ExploreView: View {
 #Preview {
     ExploreView()
 }
+
+
+
+/*
+ Section {
+ ZStack {
+ CarouselView(items: categories) { category in
+ HeroCellView(title: category.title, imageName: category.imageName)
+ }
+ }
+ .removeListRowFormatting()
+ } header: {
+ Text("Carousel")
+ }
+ */

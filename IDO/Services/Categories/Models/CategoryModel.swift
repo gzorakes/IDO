@@ -7,22 +7,42 @@
 
 import SwiftUI
 
-struct CategoryModel: Identifiable, Hashable {
-    let id: String
-    let title: String
-    let imageName: String
+enum CategoryModel: String, CaseIterable, Identifiable {
+    case hall, church, invitations, flowers, decoration, dress, costume, music, car, rings, notes
     
-    static let allCategories: [CategoryModel] = [
-        .init(id: "church", title: "Church", imageName: "church"),
-        .init(id: "hall", title: "Hall", imageName: "eventhall"),
-        .init(id: "invitations", title: "Invitations", imageName: "invitation"),
-        .init(id: "flowers", title: "Flowers", imageName: "flowers"),
-        .init(id: "decoration", title: "Decoration", imageName: "decoration"),
-        .init(id: "dress", title: "Dress", imageName: "dress"),
-        .init(id: "costume", title: "Suit", imageName: "suit"),
-        .init(id: "music", title: "Music", imageName: "music"),
-        .init(id: "car", title: "Car", imageName: "car"),
-        .init(id: "rings", title: "Rings", imageName: "rings"),
-        .init(id: "notes", title: "Notes", imageName: "notes")
-    ]
+    var id: String { rawValue }
+    
+    var title: String {
+        switch self {
+        case .hall: return "Event Hall"
+        case .church: return "Church"
+        case .invitations: return "Invitations"
+        case .flowers: return "Flowers"
+        case .decoration: return "Decoration"
+        case .dress: return "Dress"
+        case .costume: return "Suit"
+        case .music: return "Music"
+        case .car: return "Car"
+        case .rings: return "Rings"
+        case .notes: return "Notes"
+        }
+    }
+    
+    var imageName: String {
+        switch self {
+        case .hall: return "eventhall"
+        case .church: return "church"
+        case .invitations: return "invitation"
+        case .flowers: return "flowers"
+        case .decoration: return "decoration"
+        case .dress: return "dress"
+        case .costume: return "suit"
+        case .music: return "music"
+        case .car: return "car"
+        case .rings: return "rings"
+        case .notes: return "notes"
+        }
+    }
+    
+    static let allCategories: [CategoryModel] = CategoryModel.allCases
 }
