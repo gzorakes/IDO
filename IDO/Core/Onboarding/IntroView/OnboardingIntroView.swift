@@ -13,19 +13,25 @@ struct OnboardingIntroView: View {
             Group {
                 Text("Your ")
                 +
-                Text("wedding")
+                Text("wedding ")
                     .foregroundStyle(.accent)
                     .fontWeight(.semibold)
                 +
-                Text(" simplified!\n\nPlan, share, and organize every detail in one place.\n\n")
+                Text("simplified!\nOrganize every detail in one place.\n\n")
                 +
-                Text("From ideas to ")
+                Text("Get ideas generated from ")
                 +
-                Text("'I DO'")
+                Text("AI ")
                     .foregroundStyle(.accent)
                     .fontWeight(.semibold)
                 +
-                Text("!\n\nShare plans, inspiration, and special moments.")
+                Text("and have ")
+                +
+                Text("real conversations")
+                    .foregroundStyle(.accent)
+                    .fontWeight(.semibold)
+                +
+                Text("!")
             }
             .baselineOffset(6)
             .frame(maxHeight: .infinity)

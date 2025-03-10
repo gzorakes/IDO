@@ -8,84 +8,96 @@
 import SwiftUI
 
 struct OnboardingColorView: View {
+
+    @State private var selectedColor: Color?
+    @State private var name: String = ""
+    @State private var weddingDate: Date?
     
-    struct ProfileIcon: Identifiable {
-        let id = UUID()
-        let role: String
-        let icon: String
-        let color: Color
+    var daysUntilWedding: Int? {
+        guard let weddingDate else { return nil }
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        let weddingDay = calendar.startOfDay(for: weddingDate)
+        return calendar.dateComponents([.day], from: today, to: weddingDay).day
     }
-    
-    let profileIcons: [ProfileIcon] = [
-        ProfileIcon(role: "Groom", icon: "🤵🏻", color: .accent),
-        ProfileIcon(role: "Bride", icon: "👰🏻‍♀️", color: .pink),
-        ProfileIcon(role: "Best Man", icon: "🧔🏻", color: .blue),
-        ProfileIcon(role: "Bridesmaid", icon: "👩🏻‍🦱", color: .orange),
-        ProfileIcon(role: "Father", icon: "👨🏻", color: .green),
-        ProfileIcon(role: "Mother", icon: "👩🏻", color: .purple),
-        ProfileIcon(role: "Brother", icon: "🧑🏻", color: .cyan),
-        ProfileIcon(role: "Sister", icon: "👱🏻‍♀️", color: .yellow),
-        ProfileIcon(role: "Friend", icon: "👫", color: .gray)
-    ]
-    
-    @State private var selectedIcon: ProfileIcon?
-    
+
     var body: some View {
-        ScrollView {
-            colorGrid
-                .padding(.horizontal)
+        List {
+            Section("I am the...") {
+                HStack(spacing: 30) {
+                    Spacer()
+                    rectangle(color: .pink, name: "Bride", isSelected: selectedColor == .pink)
+                        .onTapGesture {
+                            selectedColor = .pink
+                        }
+                    
+                    rectangle(color: .blue, name: "Groom", isSelected: selectedColor == .blue)
+                        .onTapGesture {
+                            selectedColor = .blue
+                        }
+                    Spacer()
+                }
+            }
+            .listRowBackground(Color.clear)
+            
+            Section("My name is...") {
+                TextField("Name", text: $name)
+            }
+            
+            Section("I am getting married on...") {
+                DatePicker("Select Date", selection: Binding(
+                    get: { weddingDate ?? Date() },
+                    set: { weddingDate = $0 }
+                ), displayedComponents: .date)
+                .datePickerStyle(.compact)
+            }
+            
+            if let daysLeft = daysUntilWedding {
+                Section {
+                    Text(daysLeft < 0 ? "😱" : "\(daysLeft)")
+                        .font(.title)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.white)
+                        .padding()
+                        .background(LinearGradient(colors: [.blue.opacity(0.5), .pink.opacity(0.5)], startPoint: .bottomLeading, endPoint: .topTrailing))
+                        .cornerRadius(12)
+                        
+                } footer: {
+                    Text(daysLeft < 0 ? "This date has already passed!" :"Days left until the wedding")
+                }
+                .frame(maxWidth: .infinity)
+                .listRowBackground(Color.clear)
+            }
         }
         .safeAreaInset(edge: .bottom, alignment: .center, spacing: 16, content: {
             ZStack {
-                if selectedIcon != nil {
-                    ctaButton(selectedColor: selectedIcon?.color ?? .accent)
-                        .transition(AnyTransition.move(edge: .bottom))
+                if selectedColor != nil && !name.isEmpty && weddingDate != nil {
+                    ctaButton(selectedColor: selectedColor ?? .accent, name: name, daysUntilWedding: daysUntilWedding ?? 0)
+                        .disabled(daysUntilWedding ?? 0 <= 0)
                 }
             }
             .padding(24)
-            .background(Color(uiColor: .systemBackground))
         })
-        .animation(.bouncy, value: selectedIcon?.id)
     }
     
-    private var colorGrid: some View {
-        LazyVGrid(
-            columns: Array(repeating: GridItem(.flexible(), spacing: 16), count: 3),
-            alignment: .center,
-            spacing: 16,
-            pinnedViews: [.sectionHeaders],
-            content: {
-                Section(content: {
-                    ForEach(profileIcons) { profile in
-                        Circle()
-                            .fill(profile.color)
-                            .overlay(
-                                VStack {
-                                    Text(profile.icon)
-                                        .font(.system(size: 40))
-                                    Text(profile.role)
-                                        .font(.caption)
-                                }
-                            )
-                            .overlay(
-                                Circle()
-                                    .stroke(selectedIcon?.id == profile.id ? Color.red : Color.clear, lineWidth: 5)
-                            )
-                            .onTapGesture {
-                                selectedIcon = profile
-                            }
-                        
-                    }
-                }, header: {
-                    Text("Select a profile")
-                })
+    private func rectangle(color: Color, name: String, isSelected: Bool) -> some View {
+        RoundedRectangle(cornerRadius: 12)
+            .fill(color.opacity(0.5))
+            .frame(width: 80, height: 70)
+            .overlay(alignment: .center) {
+                Text(name)
+                    .font(.headline)
+                    .foregroundStyle(.white)
             }
-        )
+            .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                    .stroke(isSelected ? (selectedColor == .pink ? .blue.opacity(0.5) : .pink.opacity(0.5)) : .clear, lineWidth: 2)
+            )
     }
     
-    private func ctaButton(selectedColor: Color) -> some View {
+    private func ctaButton(selectedColor: Color, name: String, daysUntilWedding: Int) -> some View {
         NavigationLink {
-            OnboardingCompletedView(selectedColor: selectedColor)
+            OnboardingCompletedView(selectedColor: selectedColor, name: name, daysUntilWedding: daysUntilWedding)
         } label: {
             Text("Continue")
                 .callToActionButton()

@@ -14,11 +14,22 @@ struct ExploreView: View {
     var body: some View {
         NavigationStack {
             List {
-                categorySection
-                
-                
+                LazyVGrid(
+                    columns: Array(repeating: GridItem(.flexible()), count: 2),
+                    spacing: 12,
+                    content: {
+                        Section {
+                            ForEach(categories) { category in
+                                HeroCellView(title: category.title, imageName: category.imageName, font: .callout)
+                                    .frame(width: 170, height: 100)
+                            }
+                        }
+                    }
+                )
+                .removeListRowFormatting()
             }
-            .navigationTitle("Explore")
+            .navigationTitle("Categories")
+            .navigationBarTitleDisplayMode(.inline)
         }
     }
     

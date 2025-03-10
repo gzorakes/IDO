@@ -11,16 +11,18 @@ struct OnboardingCompletedView: View {
     
     @Environment(AppState.self) private var root
     @State private var isCompletingProfileSetup: Bool = false
-    var selectedColor: Color 
+    var selectedColor: Color
+    var name: String
+    var daysUntilWedding: Int
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Setup Complete!")
+            Text("Welcome \(name)!")
                 .font(.largeTitle)
                 .fontWeight(.semibold)
-                .foregroundStyle(selectedColor)
+                .foregroundStyle(selectedColor.opacity(0.5))
             
-            Text("We've set up your profile and you're ready to start!")
+            Text("We have \(daysUntilWedding) days to prepare everything for the wedding.")
                 .font(.title)
                 .fontWeight(.medium)
                 .foregroundStyle(.secondary)
@@ -42,7 +44,7 @@ struct OnboardingCompletedView: View {
                     ProgressView()
                         .tint(.white)
                 } else {
-                    Text("Finish")
+                    Text("Let's get started!")
                 }
             }
             .callToActionButton()
@@ -63,6 +65,6 @@ struct OnboardingCompletedView: View {
 }
 
 #Preview {
-    OnboardingCompletedView(selectedColor: .accent)
+    OnboardingCompletedView(selectedColor: .blue, name: "George", daysUntilWedding: 15)
         .environment(AppState())
 }

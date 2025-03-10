@@ -11,13 +11,12 @@ struct HeroCellView: View {
     
     var title: String? = "This is the title"
     var imageName: String? = "rings"
+    var font: Font = .headline
     
     var body: some View {
         ZStack {
             if let imageName {
-                Image(imageName)
-                    .resizable()
-                    .scaledToFit()
+                ImageView(imageName: imageName)
             } else {
                 Rectangle()
                     .fill(.accent)
@@ -29,11 +28,12 @@ struct HeroCellView: View {
                 VStack(alignment: .leading) {
                     if let title {
                         Text(title)
-                            .font(.headline)
+                            .font(font)
+                            .fontWeight(.semibold)
                     }
                 }
                 .foregroundStyle(.white)
-                .padding()
+                .padding(8)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .addingGradientBackgroundForText()
             })
