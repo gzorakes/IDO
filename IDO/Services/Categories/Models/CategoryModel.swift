@@ -8,7 +8,7 @@
 import SwiftUI
 
 enum CategoryModel: String, CaseIterable, Identifiable {
-    case hall, church, invitations, flowers, decoration, dress, costume, music, car, rings, notes
+    case hall, church, invitations, flowers, decoration, dress, costume, music, car, rings, notes, guests
     
     var id: String { rawValue }
     
@@ -25,6 +25,7 @@ enum CategoryModel: String, CaseIterable, Identifiable {
         case .car: return "Car"
         case .rings: return "Rings"
         case .notes: return "Notes"
+        case .guests: return "Guests"
         }
     }
     
@@ -41,6 +42,7 @@ enum CategoryModel: String, CaseIterable, Identifiable {
         case .car: return "car"
         case .rings: return "rings"
         case .notes: return "notes"
+        case .guests: return "guests"
         }
     }
     

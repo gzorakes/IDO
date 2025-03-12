@@ -41,4 +41,13 @@ extension View {
             )
         )
     }
+    
+    func linearBackground() -> some View {
+        LinearGradient(
+            colors: [.accent, .pink.opacity(0.4)],
+            startPoint: .bottomTrailing,
+            endPoint: .topLeading
+        )
+        .ignoresSafeArea(edges: .top)
+    }
 }

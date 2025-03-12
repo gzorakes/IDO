@@ -10,68 +10,50 @@ import SwiftUI
 struct ExploreView: View {
     
     @State private var categories: [CategoryModel] = CategoryModel.allCategories
+    @State private var path: [CategoryModel] = []
     
     var body: some View {
-        NavigationStack {
-            List {
-                LazyVGrid(
-                    columns: Array(repeating: GridItem(.flexible()), count: 2),
-                    spacing: 12,
-                    content: {
-                        Section {
-                            ForEach(categories) { category in
-                                HeroCellView(title: category.title, imageName: category.imageName, font: .callout)
-                                    .frame(width: 170, height: 100)
-                            }
-                        }
-                    }
-                )
-                .removeListRowFormatting()
+        NavigationStack(path: $path) {
+            ZStack {
+                linearBackground()
+                VStack {
+                    categoriesGrid
+                        .removeListRowFormatting()
+                }
+                .navigationTitle("Categories")
+                .navigationBarTitleDisplayMode(.inline)
+                .navigationDestination(for: CategoryModel.self) { newValue in
+                    TodoListView(category: newValue)
+                }
             }
-            .navigationTitle("Categories")
-            .navigationBarTitleDisplayMode(.inline)
         }
     }
     
-    private var categorySection: some View {
-        Section {
-            ZStack {
-                ScrollView(.horizontal) {
-                    HStack(spacing: 12) {
-                        ForEach(categories) { category in
-                            CategoryCellView(
-                                title: category.title,
-                                imageName: category.imageName
-                            )
-                        }
+    private var categoriesGrid: some View {
+        LazyVGrid(
+            columns: Array(repeating: GridItem(.flexible(), spacing: -30), count: 2),
+            alignment: .center,
+            spacing: 16,
+            content: {
+                Section {
+                    ForEach(categories) { category in
+                        HeroCellView(title: category.title, imageName: category.imageName, font: .callout)
+                            .anyButton(.press) {
+                                onCategoryPressed(category: category)
+                            }
+                            .frame(width: 160, height: 90)
+                            .shadow(radius: 5)
                     }
                 }
-                .scrollIndicators(.hidden)
-                .scrollTargetLayout()
-                .scrollTargetBehavior(.viewAligned)
             }
-            .removeListRowFormatting()
-        } header: {
-            Text("Categories")
-        }
+        )
+    }
+    
+    private func onCategoryPressed(category: CategoryModel) {
+        path.append(category)
     }
 }
 
 #Preview {
     ExploreView()
 }
-
-
-
-/*
- Section {
- ZStack {
- CarouselView(items: categories) { category in
- HeroCellView(title: category.title, imageName: category.imageName)
- }
- }
- .removeListRowFormatting()
- } header: {
- Text("Carousel")
- }
- */
