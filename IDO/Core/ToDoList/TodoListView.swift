@@ -6,78 +6,125 @@
 //
 
 import SwiftUI
+import PhotosUI
 
 struct TodoListView: View {
     var category: CategoryModel
     @State private var textItems: [TodoItem] = []
     @State private var isShowingSheet = false
+    @State private var imageItem: UIImage?
+    @State private var photosPickerItem: PhotosPickerItem?
+    @State private var selectedImage: ImageWrapper?
+
     
     var body: some View {
         ZStack {
             linearBackground()
             VStack {
+                
                 ScrollView {
                     LazyVStack(spacing: 16) {
-                        ForEach(0..<textItems.count + 1, id: \.self) { item in
-                            if item % 2 == 0 {
-                                HStack(spacing: 16) {
-                                    if item < textItems.count {
-                                        TodoListItemView(todoItem: textItems[item].text)
-                                    } else {
-                                        addNoteRectangle
-                                    }
-                                    
-                                    if item + 1 < textItems.count {
-                                        TodoListItemView(todoItem: textItems[item + 1].text)
-                                    } else if item + 1 == textItems.count {
-                                        addNoteRectangle
-                                    }
-                                }
-                            }
-                        }
+                        todoItems
                     }
                     .padding()
                 }
                 .scrollContentBackground(.hidden)
             }
             .navigationTitle(category.title)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                toolBarButtons
+            }
             .sheet(isPresented: $isShowingSheet) {
-                AddNoteView { newNote in
-                    if !newNote.isEmpty {
-                        let newItem = TodoItem(text: newNote)
-                        textItems.append(newItem)
+                textNoteSheet
+            }
+            .sheet(item: $selectedImage) { wrapper in
+                imageSheet(wrapper: wrapper)
+            }
+            .onChange(of: photosPickerItem) {
+                onChangeOfPhotoPicker()
+            }
+        }
+    }
+    
+    private var todoItems: some View {
+        ForEach(0..<textItems.count, id: \.self) { index in
+            if index % 2 == 0 {
+                HStack(spacing: 16) {
+                    TodoListItemView(todoItem: textItems[index], selectedImage: $selectedImage)
+                    
+                    if index + 1 < textItems.count {
+                        TodoListItemView(todoItem: textItems[index + 1], selectedImage: $selectedImage)
+                    } else {
+                        Rectangle()
+                            .fill(Color.clear)
+                            .frame(width: 170, height: 100)
                     }
                 }
             }
         }
     }
     
-    var addNoteRectangle: some View {
-        Button {
-            isShowingSheet.toggle()
-        } label: {
-            ZStack {
-                Rectangle()
-                    .fill(.accent)
-                    .frame(width: 170, height: 100)
-                    .cornerRadius(16)
-                    .shadow(radius: 5)
-                Image(systemName: "plus.circle.fill")
-                    .font(.title)
-                    .foregroundColor(.white)
+    private var toolBarButtons: some ToolbarContent {
+        ToolbarItem(placement: .topBarTrailing) {
+            HStack(spacing: 16) {
+                Image(systemName: "square.and.pencil")
+                    .foregroundStyle(.accent)
+                    .anyButton {
+                        isShowingSheet = true
+                    }
+                PhotosPicker(selection: $photosPickerItem) {
+                    Image(systemName: "photo")
+                        .offset(y: 1)
+                }
             }
+        }
+    }
+    
+    private var textNoteSheet: some View {
+        AddNoteView { newNote in
+            if !newNote.isEmpty || imageItem != nil {
+                let newItem = TodoItem(text: newNote, image: imageItem)
+                textItems.append(newItem)
+                imageItem = nil
+            }
+        }
+    }
+    
+    private func imageSheet(wrapper: ImageWrapper) -> some View {
+        VStack {
+            Image(uiImage: wrapper.image)
+                .resizable()
+                .scaledToFit()
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
+    }
+    
+    private func onChangeOfPhotoPicker() {
+        Task {
+            if let photosPickerItem,
+               let data = try? await photosPickerItem.loadTransferable(type: Data.self) {
+                if let image = UIImage(data: data) {
+                    let newItem = TodoItem(text: "", image: image)
+                    textItems.append(newItem)
+                }
+            }
+            photosPickerItem = nil
         }
     }
 }
 
 #Preview {
-    TodoListView(category: CategoryModel.car)
+    NavigationStack {
+        TodoListView(category: CategoryModel.car)
+    }
 }
 
 
 struct TodoListItemView: View {
     
-    var todoItem: String = "This is a note"
+    var todoItem: TodoItem
+    @Binding var selectedImage: ImageWrapper?
     
     var body: some View {
         ZStack {
@@ -86,21 +133,34 @@ struct TodoListItemView: View {
                 .frame(width: 170, height: 100)
                 .cornerRadius(16)
                 .shadow(radius: 5)
-            ScrollView {
-                VStack {
-                    Text(todoItem)
-                        .padding(4)
-                        .foregroundStyle(.white)
+            
+            if let image = todoItem.image {
+                Image(uiImage: image)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 170, height: 100)
+                    .cornerRadius(16)
+                    .clipped()
+                    .onTapGesture {
+                        selectedImage = ImageWrapper(image: image)
+                    }
+            } else {
+                ScrollView {
+                    VStack {
+                        Text(todoItem.text)
+                            .padding(6)
+                            .foregroundStyle(.white)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
+                .frame(width: 170, height: 100)
             }
-            .frame(width: 170, height: 100)
         }
     }
 }
 
 #Preview("todolistitem") {
-    TodoListItemView()
+    TodoListItemView(todoItem: TodoItem(text: "This is an item", image: nil), selectedImage: .constant(nil))
 }
 
 
@@ -108,15 +168,21 @@ struct TodoListItemView: View {
 struct TodoItem: Identifiable {
     let id = UUID()
     let text: String
+    let image: UIImage?
 }
 
+struct ImageWrapper: Identifiable {
+    let id = UUID()
+    let image: UIImage
+}
 
 
 
 struct AddNoteView: View {
     @Environment(\.dismiss) private var dismiss
-    @State private var newNote: String = ""
     @FocusState private var isTextFieldFocused: Bool
+    
+    @State private var newNote: String = ""
     var onSave: (String) -> Void
     
     var body: some View {
@@ -131,21 +197,11 @@ struct AddNoteView: View {
                 VStack {
                     TextField("Type...", text: $newNote, axis: .vertical)
                         .lineLimit(5...)
-                        .padding()
                         .autocorrectionDisabled()
+                        .padding()
                         .focused($isTextFieldFocused)
-                        .toolbar {
-                            ToolbarItemGroup(placement: .keyboard) {
-                                Spacer()
-                                Button("Done") {
-                                    isTextFieldFocused = false
-                                }
-                            }
-                        }
                         .onAppear {
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                                isTextFieldFocused = true
-                            }
+                            isTextFieldFocused = true
                         }
                     
                     Spacer()
@@ -170,4 +226,9 @@ struct AddNoteView: View {
             }
         }
     }
+}
+
+
+#Preview("sheet") {
+    AddNoteView(onSave: {_ in })
 }

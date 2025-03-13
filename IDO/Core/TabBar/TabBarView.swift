@@ -13,12 +13,12 @@ struct TabBarView: View {
         TabView {
             ExploreView()
                 .tabItem {
-                    Label("Explore", systemImage: "eyes")
+                    Label("Notes", systemImage: "list.clipboard")
                 }
                 
             ChatsView()
                 .tabItem {
-                    Label("Chats", systemImage: "bubble.left.and.bubble.right.fill")
+                    Label("AI Chat", systemImage: "brain.head.profile")
                 }
             ProfileView()
                 .tabItem {
