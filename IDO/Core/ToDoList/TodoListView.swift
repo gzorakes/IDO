@@ -97,6 +97,14 @@ struct TodoListView: View {
                 .resizable()
                 .scaledToFit()
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(
+                    RadialGradient(
+                        gradient: Gradient(colors: [.pink.opacity(0.4), .accent.opacity(0.6)]),
+                        center: .center,
+                        startRadius: 0,
+                        endRadius: UIScreen.main.bounds.height / 2
+                    )
+                )
         }
     }
     
@@ -120,115 +128,3 @@ struct TodoListView: View {
     }
 }
 
-
-struct TodoListItemView: View {
-    
-    var todoItem: TodoItem
-    @Binding var selectedImage: ImageWrapper?
-    
-    var body: some View {
-        ZStack {
-            Rectangle()
-                .fill(.accent)
-                .frame(width: 170, height: 100)
-                .cornerRadius(16)
-                .shadow(radius: 5)
-            
-            if let image = todoItem.image {
-                Image(uiImage: image)
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 170, height: 100)
-                    .cornerRadius(16)
-                    .clipped()
-                    .onTapGesture {
-                        selectedImage = ImageWrapper(image: image)
-                    }
-            } else {
-                ScrollView {
-                    VStack {
-                        Text(todoItem.text)
-                            .padding(6)
-                            .foregroundStyle(.white)
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                }
-                .frame(width: 170, height: 100)
-            }
-        }
-    }
-}
-
-#Preview("todolistitem") {
-    TodoListItemView(todoItem: TodoItem(text: "This is an item", image: nil), selectedImage: .constant(nil))
-}
-
-
-
-struct TodoItem: Identifiable {
-    let id = UUID()
-    let text: String
-    let image: UIImage?
-}
-
-struct ImageWrapper: Identifiable {
-    let id = UUID()
-    let image: UIImage
-}
-
-
-
-struct AddNoteView: View {
-    @Environment(\.dismiss) private var dismiss
-    @FocusState private var isTextFieldFocused: Bool
-    
-    @State private var newNote: String = ""
-    var onSave: (String) -> Void
-    
-    var body: some View {
-        NavigationView {
-            ZStack {
-                LinearGradient(
-                    colors: [.pink.opacity(0.4), .accent],
-                    startPoint: .bottomTrailing,
-                    endPoint: .topLeading
-                )
-                .ignoresSafeArea()
-                VStack {
-                    TextField("Type...", text: $newNote, axis: .vertical)
-                        .lineLimit(5...)
-                        .autocorrectionDisabled()
-                        .padding()
-                        .focused($isTextFieldFocused)
-                        .onAppear {
-                            isTextFieldFocused = true
-                        }
-                    
-                    Spacer()
-                }
-                .navigationTitle("Note")
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar {
-                    ToolbarItem(placement: .primaryAction) {
-                        Button {
-                            onSave(newNote)
-                            dismiss()
-                        } label: {
-                            Image(systemName: "square.and.arrow.down")
-                                .foregroundStyle(.black)
-                        }
-                        .disabled(newNote.isEmpty)
-                    }
-                }
-            }
-            .onTapGesture {
-                isTextFieldFocused = false
-            }
-        }
-    }
-}
-
-
-#Preview("sheet") {
-    AddNoteView(onSave: {_ in })
-}

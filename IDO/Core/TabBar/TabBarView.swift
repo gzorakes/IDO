@@ -11,12 +11,12 @@ struct TabBarView: View {
     
     var body: some View {
         TabView {
-            ExploreView()
+            CategoriesView()
                 .tabItem {
                     Label("Notes", systemImage: "list.clipboard")
                 }
                 
-            ChatsView()
+            AIChatView()
                 .tabItem {
                     Label("AI Chat", systemImage: "brain.head.profile")
                 }

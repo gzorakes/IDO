@@ -31,17 +31,17 @@ enum CategoryModel: String, CaseIterable, Identifiable {
     
     var imageName: String {
         switch self {
-        case .hall: return "eventhall"
-        case .church: return "church"
-        case .invitations: return "invitation"
-        case .flowers: return "flowers"
-        case .decoration: return "decoration"
-        case .dress: return "dress"
-        case .costume: return "suit"
-        case .music: return "music"
-        case .car: return "car"
-        case .rings: return "rings"
-        case .notes: return "notes"
+        case .hall: return "eventhall2"
+        case .church: return "church2"
+        case .invitations: return "invitation2"
+        case .flowers: return "flowers2"
+        case .decoration: return "decoration2"
+        case .dress: return "dress2"
+        case .costume: return "suit2"
+        case .music: return "music2"
+        case .car: return "car2"
+        case .rings: return "rings2"
+        case .notes: return "notes2"
         case .guests: return "guests"
         }
     }

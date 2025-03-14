@@ -1,5 +1,5 @@
 //
-//  ExploreView.swift
+//  CategoriesView.swift
 //  IDO
 //
 //  Created by Γιωργος Ζωρακης on 5/3/25.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ExploreView: View {
+struct CategoriesView: View {
     
     @State private var categories: [CategoryModel] = CategoryModel.allCategories
     @State private var path: [CategoryModel] = []
@@ -55,5 +55,5 @@ struct ExploreView: View {
 }
 
 #Preview {
-    ExploreView()
+    CategoriesView()
 }

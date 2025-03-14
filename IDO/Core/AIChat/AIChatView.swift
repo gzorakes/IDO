@@ -1,5 +1,5 @@
 //
-//  ChatsView.swift
+//  AIChatView.swift
 //  IDO
 //
 //  Created by Γιωργος Ζωρακης on 5/3/25.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ChatsView: View {
+struct AIChatView: View {
     var body: some View {
         NavigationStack {
             Text("Chats")
@@ -17,5 +17,5 @@ struct ChatsView: View {
 }
 
 #Preview {
-    ChatsView()
+    AIChatView()
 }

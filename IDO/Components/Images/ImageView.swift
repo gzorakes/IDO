@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ImageView: View {
     
-    var imageName: String = "eventhall"
+    var imageName: String = "dress2"
     var resizingMode: ContentMode = .fill
     
     var body: some View {
@@ -19,6 +19,7 @@ struct ImageView: View {
                 Image(imageName)
                     .resizable()
                     .aspectRatio(contentMode: resizingMode)
+                    .offset(y: 10)
                     .allowsHitTesting(false)
             )
             .clipped()
