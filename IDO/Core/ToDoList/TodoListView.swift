@@ -84,7 +84,7 @@ struct TodoListView: View {
     private var textNoteSheet: some View {
         AddNoteView { newNote in
             if !newNote.isEmpty || imageItem != nil {
-                let newItem = TodoItem(text: newNote, image: imageItem)
+                let newItem = TodoItem(id: UUID().uuidString, text: newNote, image: imageItem)
                 textItems.append(newItem)
                 imageItem = nil
             }
@@ -113,7 +113,7 @@ struct TodoListView: View {
             if let photosPickerItem,
                let data = try? await photosPickerItem.loadTransferable(type: Data.self) {
                 if let image = UIImage(data: data) {
-                    let newItem = TodoItem(text: "", image: image)
+                    let newItem = TodoItem(id: UUID().uuidString, text: "", image: image)
                     textItems.append(newItem)
                 }
             }

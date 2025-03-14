@@ -46,5 +46,5 @@ struct TodoListItemView: View {
 }
 
 #Preview {
-    TodoListItemView(todoItem: TodoItem(text: "This is an item", image: nil), selectedImage: .constant(nil))
+    TodoListItemView(todoItem: TodoItem(id: "1234", text: "This is an item", image: nil), selectedImage: .constant(nil))
 }

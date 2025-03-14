@@ -8,12 +8,12 @@
 import SwiftUI
 
 struct TodoItem: Identifiable {
-    let id = UUID()
+    let id: String
     let text: String
     let image: UIImage?
 }
 
 struct ImageWrapper: Identifiable {
-    let id = UUID()
+    let id = UUID().uuidString
     let image: UIImage
 }
