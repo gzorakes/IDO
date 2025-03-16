@@ -11,11 +11,9 @@ struct AIChatView: View {
     var body: some View {
         NavigationStack {
             
-            ZStack {
-                linearBackground()
-                Text("Chats")
-                    .navigationTitle("Chats")
-            }
+            Text("Chats")
+                .navigationTitle("Chats")
+            
         }
     }
 }

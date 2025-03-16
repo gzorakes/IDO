@@ -48,7 +48,6 @@ struct WelcomeView: View {
     private var ctaButtons: some View {
         VStack {
             Text("Already have an account? Sign in!")
-                .foregroundStyle(.accent)
                 .underline()
                 .font(.body)
                 .padding(8)
@@ -71,12 +70,13 @@ struct WelcomeView: View {
                 Text("Terms of Service")
             }
             Circle()
-                .fill(.accent)
+                .fill(.secondary)
                 .frame(width: 4, height: 4)
             Link(destination: URL(string: Constants.privacyPolicyUrl)!) {
                 Text("Privacy Policy")
             }
         }
+        .foregroundStyle(.secondary)
     }
 }
 

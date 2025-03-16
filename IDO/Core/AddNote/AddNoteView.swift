@@ -16,13 +16,13 @@ struct AddNoteView: View {
     
     var body: some View {
         NavigationView {
-            ZStack {
-                LinearGradient(
-                    colors: [.pink.opacity(0.4), .accent],
-                    startPoint: .bottomTrailing,
-                    endPoint: .topLeading
-                )
-                .ignoresSafeArea()
+//            ZStack {
+//                LinearGradient(
+//                    colors: [.customPink, .accent],
+//                    startPoint: .bottomTrailing,
+//                    endPoint: .topLeading
+//                )
+//                .ignoresSafeArea()
                 VStack {
                     TextField("Type...", text: $newNote, axis: .vertical)
                         .lineLimit(5...)
@@ -49,7 +49,7 @@ struct AddNoteView: View {
                         .disabled(newNote.isEmpty)
                     }
                 }
-            }
+//            }
             .onTapGesture {
                 isTextFieldFocused = false
             }

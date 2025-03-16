@@ -26,14 +26,14 @@ struct OnboardingColorView: View {
             Section("I am the...") {
                 HStack(spacing: 30) {
                     Spacer()
-                    rectangle(color: .pink, name: "Bride", isSelected: selectedColor == .pink)
+                    rectangle(color: .customPink, name: "Bride", isSelected: selectedColor == .customPink)
                         .onTapGesture {
-                            selectedColor = .pink
+                            selectedColor = .customPink
                         }
                     
-                    rectangle(color: .blue, name: "Groom", isSelected: selectedColor == .blue)
+                    rectangle(color: .accent, name: "Groom", isSelected: selectedColor == .accent)
                         .onTapGesture {
-                            selectedColor = .blue
+                            selectedColor = .accent
                         }
                     Spacer()
                 }
@@ -59,7 +59,7 @@ struct OnboardingColorView: View {
                         .fontWeight(.semibold)
                         .foregroundColor(.white)
                         .padding()
-                        .background(LinearGradient(colors: [.blue.opacity(0.5), .pink.opacity(0.5)], startPoint: .bottomLeading, endPoint: .topTrailing))
+                        .background(LinearGradient(colors: [.accent, .customPink], startPoint: .bottomLeading, endPoint: .topTrailing))
                         .cornerRadius(12)
                         
                 } footer: {
@@ -82,7 +82,7 @@ struct OnboardingColorView: View {
     
     private func rectangle(color: Color, name: String, isSelected: Bool) -> some View {
         RoundedRectangle(cornerRadius: 12)
-            .fill(color.opacity(0.5))
+            .fill(color)
             .frame(width: 80, height: 70)
             .overlay(alignment: .center) {
                 Text(name)
@@ -91,7 +91,7 @@ struct OnboardingColorView: View {
             }
             .overlay(
                 RoundedRectangle(cornerRadius: 12)
-                    .stroke(isSelected ? (selectedColor == .pink ? .blue.opacity(0.5) : .pink.opacity(0.5)) : .clear, lineWidth: 2)
+                    .stroke(isSelected ? (selectedColor == .customPink ? .accent : .customPink) : .clear, lineWidth: 2)
             )
     }
     

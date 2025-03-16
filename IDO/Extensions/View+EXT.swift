@@ -44,7 +44,7 @@ extension View {
     
     func linearBackground() -> some View {
         LinearGradient(
-            colors: [.accent, .pink.opacity(0.4)],
+            colors: [.accent, .customPink],
             startPoint: .bottomTrailing,
             endPoint: .topLeading
         )

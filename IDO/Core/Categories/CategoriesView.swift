@@ -14,8 +14,8 @@ struct CategoriesView: View {
     
     var body: some View {
         NavigationStack(path: $path) {
-            ZStack {
-                linearBackground()
+//            ZStack {
+//                linearBackground()
                 VStack {
                     categoriesGrid
                         .removeListRowFormatting()
@@ -25,7 +25,7 @@ struct CategoriesView: View {
                 .navigationDestination(for: CategoryModel.self) { newValue in
                     TodoListView(category: newValue)
                 }
-            }
+//            }
         }
     }
     

@@ -18,8 +18,8 @@ struct TodoListView: View {
 
     
     var body: some View {
-        ZStack {
-            linearBackground()
+//        ZStack {
+//            linearBackground()
             VStack {
                 
                 ScrollView {
@@ -44,7 +44,7 @@ struct TodoListView: View {
             .onChange(of: photosPickerItem) {
                 onChangeOfPhotoPicker()
             }
-        }
+//        }
     }
     
     private var todoItems: some View {
@@ -97,14 +97,14 @@ struct TodoListView: View {
                 .resizable()
                 .scaledToFit()
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(
-                    RadialGradient(
-                        gradient: Gradient(colors: [.pink.opacity(0.4), .accent.opacity(0.6)]),
-                        center: .center,
-                        startRadius: 0,
-                        endRadius: UIScreen.main.bounds.height / 2
-                    )
-                )
+//                .background(
+//                    RadialGradient(
+//                        gradient: Gradient(colors: [.customPink.opacity(0.4), .accent.opacity(0.6)]),
+//                        center: .center,
+//                        startRadius: 0,
+//                        endRadius: UIScreen.main.bounds.height / 2
+//                    )
+//                )
         }
     }
     
