@@ -39,7 +39,7 @@ struct AddNoteView: View {
                             dismiss()
                         } label: {
                             Image(systemName: "square.and.arrow.down")
-                                .foregroundStyle(.black)
+                                .foregroundStyle(.primary)
                         }
                         .disabled(newNote.isEmpty)
                     }
