@@ -16,7 +16,7 @@ struct HeroCellView: View {
     var body: some View {
         ZStack {
             if let imageName {
-                ImageView(imageName: imageName)
+                ImageView(imageName: imageName, offset: 10)
             } else {
                 Rectangle()
                     .fill(.accent)

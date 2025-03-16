@@ -39,7 +39,7 @@ struct OnboardingIntroView: View {
             .fontDesign(.rounded)
             
             NavigationLink {
-                OnboardingColorView()
+                OnboardingInfoView()
             } label: {
                 Text("Continue")
                     .callToActionButton()

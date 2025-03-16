@@ -10,7 +10,8 @@ import SwiftUI
 struct WelcomeView: View {
     
     @State var imageName: String = Constants.randomImage
-    
+    @State private var showSignInView: Bool = false
+
     var body: some View {
         NavigationStack {
             VStack(spacing: 8.0) {
@@ -28,6 +29,13 @@ struct WelcomeView: View {
                 
                 policyLinks
             }
+        }
+        .sheet(isPresented: $showSignInView) {
+            CreateAccountView(
+                title: "Sign in",
+                subtitle: "Connect to an existing account"
+            )
+                .presentationDetents([.height(300)])
         }
     }
     
@@ -47,20 +55,20 @@ struct WelcomeView: View {
     
     private var ctaButtons: some View {
         VStack {
-            Text("Already have an account? Sign in!")
-                .underline()
-                .font(.body)
-                .padding(8)
-                .tappableBackground()
-                .onTapGesture {
-                    
-                }
             NavigationLink {
                 OnboardingIntroView()
             } label: {
                 Text("Get Started")
                     .callToActionButton()
             }
+            Text("Already have an account? Sign in!")
+                .underline()
+                .font(.body)
+                .padding(8)
+                .tappableBackground()
+                .onTapGesture {
+                    onSignInPressed()
+                }
         }
     }
     
@@ -77,6 +85,10 @@ struct WelcomeView: View {
             }
         }
         .foregroundStyle(.secondary)
+    }
+    
+    private func onSignInPressed() {
+        showSignInView = true
     }
 }
 

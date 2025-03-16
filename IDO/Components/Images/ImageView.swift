@@ -11,6 +11,7 @@ struct ImageView: View {
     
     var imageName: String = "dress2"
     var resizingMode: ContentMode = .fill
+    var offset: CGFloat = 0
     
     var body: some View {
         Rectangle()
@@ -19,7 +20,7 @@ struct ImageView: View {
                 Image(imageName)
                     .resizable()
                     .aspectRatio(contentMode: resizingMode)
-                    .offset(y: 10)
+                    .offset(y: offset)
                     .allowsHitTesting(false)
             )
             .clipped()

@@ -1,5 +1,5 @@
 //
-//  OnboardingColorView.swift
+//  OnboardingInfoView.swift
 //  IDO
 //
 //  Created by Γιωργος Ζωρακης on 7/3/25.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct OnboardingColorView: View {
+struct OnboardingInfoView: View {
 
     @State private var selectedColor: Color?
     @State private var name: String = ""
@@ -107,7 +107,7 @@ struct OnboardingColorView: View {
 
 #Preview {
     NavigationStack {
-        OnboardingColorView()
+        OnboardingInfoView()
     }
     .environment(AppState())
 }

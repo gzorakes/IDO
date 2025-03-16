@@ -16,13 +16,8 @@ struct AddNoteView: View {
     
     var body: some View {
         NavigationView {
-//            ZStack {
-//                LinearGradient(
-//                    colors: [.customPink, .accent],
-//                    startPoint: .bottomTrailing,
-//                    endPoint: .topLeading
-//                )
-//                .ignoresSafeArea()
+            ZStack {
+                Color.black.opacity(0.001) // keeping a background for tapping and dismiss the keyboard
                 VStack {
                     TextField("Type...", text: $newNote, axis: .vertical)
                         .lineLimit(5...)
@@ -49,7 +44,7 @@ struct AddNoteView: View {
                         .disabled(newNote.isEmpty)
                     }
                 }
-//            }
+            }
             .onTapGesture {
                 isTextFieldFocused = false
             }

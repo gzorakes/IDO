@@ -12,6 +12,7 @@ struct UserModel {
     let dateCreated: Date?
     let role: String?
     let name: String?
+    let weddingDate: Date?
     let didCompleteOnboarding: Bool?
     let profileColorHex: String?
     
@@ -20,6 +21,7 @@ struct UserModel {
         dateCreated: Date? = nil,
         role: String? = nil,
         name: String? = nil,
+        weddingDate: Date? = nil,
         didCompleteOnboarding: Bool? = nil,
         profileColorHex: String? = nil
     ) {
@@ -27,16 +29,22 @@ struct UserModel {
         self.dateCreated = dateCreated
         self.role = role
         self.name = name
+        self.weddingDate  = weddingDate
         self.didCompleteOnboarding = didCompleteOnboarding
         self.profileColorHex = profileColorHex
     }
     
     var profileColorCalculated: Color {
-        guard let profileColorHex else {
-            return .accent
-        }
-        
+        guard let profileColorHex else { return .accent }
         return Color(hex: profileColorHex)
+    }
+    
+    var daysUntilWedding: Int? {
+        guard let weddingDate else { return nil }
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        let weddingDay = calendar.startOfDay(for: weddingDate)
+        return calendar.dateComponents([.day], from: today, to: weddingDay).day
     }
     
     static var mock: Self {
@@ -46,10 +54,42 @@ struct UserModel {
     static var mocks: [Self] {
         let now = Date()
         return [
-            UserModel(userId: "user1", dateCreated: now, role: "Bride", name: "Yara", didCompleteOnboarding: true, profileColorHex: "#FF8DA1"),
-            UserModel(userId: "user2", dateCreated: now.addingTimeInterval(days: -1), role: "Groom", name: "George", didCompleteOnboarding: false, profileColorHex: "#6482AD"),
-            UserModel(userId: "user3", dateCreated: now.addingTimeInterval(days: -2), role: "Bride", name: "Maria", didCompleteOnboarding: true, profileColorHex: "#FF8DA1"),
-            UserModel(userId: "user4", dateCreated: now.addingTimeInterval(days: -3), role: "Groom", name: "Manos", didCompleteOnboarding: false, profileColorHex: "#6482AD")
+            UserModel(
+                userId: "user1",
+                dateCreated: now,
+                role: "Bride",
+                name: "Yara",
+                weddingDate: now.addingTimeInterval(days: 45),
+                didCompleteOnboarding: true,
+                profileColorHex: "#FF8DA1"
+            ),
+            UserModel(
+                userId: "user2",
+                dateCreated: now.addingTimeInterval(days: -1),
+                role: "Groom",
+                name: "George",
+                weddingDate: now.addingTimeInterval(days: 15),
+                didCompleteOnboarding: false,
+                profileColorHex: "#6482AD"
+            ),
+            UserModel(
+                userId: "user3",
+                dateCreated: now.addingTimeInterval(days: -2),
+                role: "Bride",
+                name: "Maria",
+                weddingDate: now.addingTimeInterval(days: 66),
+                didCompleteOnboarding: true,
+                profileColorHex: "#FF8DA1"
+            ),
+            UserModel(
+                userId: "user4",
+                dateCreated: now.addingTimeInterval(days: -3),
+                role: "Groom",
+                name: "Manos",
+                weddingDate: now.addingTimeInterval(days: 87),
+                didCompleteOnboarding: false,
+                profileColorHex: "#6482AD"
+            )
 
         ]
     }

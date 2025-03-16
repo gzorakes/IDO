@@ -20,9 +20,9 @@ struct TabBarView: View {
                 .tabItem {
                     Label("AI Chat", systemImage: "brain.head.profile")
                 }
-            ProfileView()
+            AccountView()
                 .tabItem {
-                    Label("Profile", systemImage: "person")
+                    Label("Account", systemImage: "person")
                 }
         }
     }
@@ -30,4 +30,5 @@ struct TabBarView: View {
 
 #Preview {
     TabBarView()
+        .environment(AppState())
 }

@@ -20,7 +20,7 @@ struct OnboardingCompletedView: View {
             Text("Welcome \(name)!")
                 .font(.largeTitle)
                 .fontWeight(.semibold)
-                .foregroundStyle(selectedColor.opacity(0.5))
+                .foregroundStyle(selectedColor)
             
             Text("We have \(daysUntilWedding) days to prepare everything for the wedding.")
                 .font(.title)
