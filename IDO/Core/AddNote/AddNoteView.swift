@@ -13,6 +13,7 @@ struct AddNoteView: View {
     
     @State private var newNote: String = ""
     var onSave: (String) -> Void
+    var itemToEdit: TodoItem?
     
     var body: some View {
         NavigationView {
@@ -26,11 +27,14 @@ struct AddNoteView: View {
                         .focused($isTextFieldFocused)
                         .onAppear {
                             isTextFieldFocused = true
+                            if let itemToEdit = itemToEdit {
+                                newNote = itemToEdit.text
+                            }
                         }
                     
                     Spacer()
                 }
-                .navigationTitle("Note")
+                .navigationTitle(itemToEdit == nil ? "Add Note" : "Edit Note")
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .primaryAction) {

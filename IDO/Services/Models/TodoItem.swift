@@ -9,8 +9,10 @@ import SwiftUI
 
 struct TodoItem: Identifiable {
     let id: String
-    let text: String
-    let image: UIImage?
+    var text: String
+    var image: UIImage?
+    
+    
 }
 
 struct ImageWrapper: Identifiable {

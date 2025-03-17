@@ -11,7 +11,8 @@ struct TodoListItemView: View {
     
     var todoItem: TodoItem
     @Binding var selectedImage: ImageWrapper?
-    
+    var onEdit: () -> Void
+
     var body: some View {
         ZStack {
             Rectangle()
@@ -19,6 +20,7 @@ struct TodoListItemView: View {
                 .frame(width: 170, height: 100)
                 .cornerRadius(16)
                 .shadow(radius: 5)
+                
             
             if let image = todoItem.image {
                 Image(uiImage: image)
@@ -38,13 +40,27 @@ struct TodoListItemView: View {
                             .foregroundStyle(.white)
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
+                    
                 }
+                
                 .frame(width: 170, height: 100)
+                .overlay(alignment: .bottomTrailing) {
+                    Image(systemName: "pencil")
+                        .foregroundColor(.accent)
+                        .padding(6)
+                        .background(Color.white)
+                        .clipShape(Circle())
+                        .padding(6)
+                        .anyButton {
+                            onEdit()
+                        }
+                }
             }
         }
+        
     }
 }
 
 #Preview {
-    TodoListItemView(todoItem: TodoItem(id: "1234", text: "This is an item", image: nil), selectedImage: .constant(nil))
+    TodoListItemView(todoItem: TodoItem(id: "1234", text: "This is an item", image: nil), selectedImage: .constant(nil), onEdit: {})
 }
