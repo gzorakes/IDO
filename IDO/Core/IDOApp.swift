@@ -8,11 +8,12 @@
 import SwiftUI
 import Firebase
 
+
 @main
 struct IDOApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+
     var body: some Scene {
-        @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
-        
         WindowGroup {
             AppView()
         }
