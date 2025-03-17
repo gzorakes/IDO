@@ -11,7 +11,7 @@ struct AIChatView: View {
     var body: some View {
         NavigationStack {
             
-            Text("Chats")
+            ChatView()
                 .navigationTitle("Chats")
             
         }

@@ -42,7 +42,7 @@ enum CategoryModel: String, CaseIterable, Identifiable {
         case .car: return "car2"
         case .rings: return "rings2"
         case .notes: return "notes2"
-        case .guests: return "guests"
+        case .guests: return "guests2"
         }
     }
     
