@@ -9,9 +9,10 @@ import SwiftUI
 
 struct TodoListItemView: View {
     
-    var todoItem: TodoItem
     @Binding var selectedImage: ImageWrapper?
+    var todoItem: TodoItem
     var onEdit: () -> Void
+    var onDelete: () -> Void
 
     var body: some View {
         ZStack {
@@ -44,23 +45,28 @@ struct TodoListItemView: View {
                 }
                 
                 .frame(width: 170, height: 100)
-                .overlay(alignment: .bottomTrailing) {
-                    Image(systemName: "pencil")
-                        .foregroundColor(.accent)
-                        .padding(6)
-                        .background(Color.white)
-                        .clipShape(Circle())
-                        .padding(6)
-                        .anyButton {
-                            onEdit()
-                        }
-                }
             }
+        }
+        .onLongPressGesture {
+            onDelete()
+        }
+        .anyButton {
+            onEdit()
         }
         
     }
 }
 
 #Preview {
-    TodoListItemView(todoItem: TodoItem(id: "1234", text: "This is an item", image: nil), selectedImage: .constant(nil), onEdit: {})
+    TodoListItemView(
+        selectedImage: .constant(nil),
+        todoItem: TodoItem(
+            id: "1234",
+            text: "This is an item",
+            image: nil,
+            categoryId: "car"
+        ),
+        onEdit: { },
+        onDelete: { }
+    )
 }

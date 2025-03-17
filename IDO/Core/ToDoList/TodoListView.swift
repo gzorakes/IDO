@@ -16,7 +16,8 @@ struct TodoListView: View {
     @State private var photosPickerItem: PhotosPickerItem?
     @State private var selectedImage: ImageWrapper?
     
-    @State private var editingItem: TodoItem? = nil
+    @State private var editingItem: TodoItem? 
+    @State private var itemToDelete: TodoItem?
     
     var body: some View {
         VStack {
@@ -33,6 +34,9 @@ struct TodoListView: View {
         .toolbar {
             toolBarButtons
         }
+        .onAppear {
+            textItems = TodoItem.mocks.filter { $0.categoryId == category.rawValue }
+        }
         .sheet(isPresented: $isShowingSheet) {
             addTextNoteSheet
         }
@@ -45,27 +49,62 @@ struct TodoListView: View {
         .onChange(of: photosPickerItem) {
             onChangeOfPhotoPicker()
         }
+        .confirmationDialog("Delete Item", isPresented: Binding<Bool>(
+            get: { itemToDelete != nil },
+            set: { _ in itemToDelete = nil }
+        )) {
+            Button("Delete", role: .destructive) {
+                if let itemToDelete = itemToDelete,
+                   let index = textItems.firstIndex(where: { $0.id == itemToDelete.id }) {
+                    textItems.remove(at: index)
+                }
+            }
+            Button("Cancel", role: .cancel) {
+                itemToDelete = nil
+            }
+        }
+
     }
     
+    @ViewBuilder
     private var todoItems: some View {
-        ForEach(0..<textItems.count, id: \.self) { index in
-            if index % 2 == 0 {
-                HStack(spacing: 16) {
-                    TodoListItemView(todoItem: textItems[index], selectedImage: $selectedImage, onEdit: {
-                        editingItem = textItems[index]
-                    })
-                    
-                    if index + 1 < textItems.count {
-                        TodoListItemView(todoItem: textItems[index + 1], selectedImage: $selectedImage, onEdit: {
-                            editingItem = textItems[index + 1]
-                        })
-                    } else {
-                        Rectangle()
-                            .fill(Color.clear)
-                            .frame(width: 170, height: 100)
+        if !textItems.isEmpty {
+            ForEach(0..<textItems.count, id: \.self) { index in
+                if index % 2 == 0 {
+                    HStack(spacing: 16) {
+                        TodoListItemView(
+                            selectedImage: $selectedImage,
+                            todoItem: textItems[index],
+                            onEdit: {
+                                editingItem = textItems[index]
+                            },
+                            onDelete: {
+                                deleteItem(at: index)
+                            }
+                        )
+                        
+                        if index + 1 < textItems.count {
+                            TodoListItemView(
+                                selectedImage: $selectedImage,
+                                todoItem: textItems[index + 1],
+                                onEdit: {
+                                    editingItem = textItems[index + 1]
+                                },
+                                onDelete: {
+                                    deleteItem(at: index + 1)
+                                }
+                            )
+                        } else {
+                            Rectangle()
+                                .fill(Color.clear)
+                                .frame(width: 170, height: 100)
+                        }
                     }
                 }
             }
+        } else {
+            Text("Your list is empty...")
+                .foregroundStyle(.secondary)
         }
     }
     
@@ -88,7 +127,11 @@ struct TodoListView: View {
     private var addTextNoteSheet: some View {
         AddNoteView(onSave: { newNote in
             if !newNote.isEmpty || imageItem != nil {
-                let newItem = TodoItem(id: UUID().uuidString, text: newNote, image: imageItem)
+                let newItem = TodoItem(
+                    id: UUID().uuidString,
+                    text: newNote,
+                    image: imageItem,
+                    categoryId: category.rawValue)
                 textItems.append(newItem)
                 imageItem = nil
             }
@@ -117,12 +160,16 @@ struct TodoListView: View {
             if let photosPickerItem,
                let data = try? await photosPickerItem.loadTransferable(type: Data.self) {
                 if let image = UIImage(data: data) {
-                    let newItem = TodoItem(id: UUID().uuidString, text: "", image: image)
+                    let newItem = TodoItem(id: UUID().uuidString, text: "", image: image, categoryId: category.rawValue)
                     textItems.append(newItem)
                 }
             }
             photosPickerItem = nil
         }
+    }
+    
+    private func deleteItem(at index: Int) {
+        itemToDelete = textItems[index] 
     }
 }
 

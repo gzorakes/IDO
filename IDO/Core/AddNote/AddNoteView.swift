@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct AddNoteView: View {
+    
     @Environment(\.dismiss) private var dismiss
     @FocusState private var isTextFieldFocused: Bool
-    
     @State private var newNote: String = ""
     var onSave: (String) -> Void
     var itemToEdit: TodoItem?

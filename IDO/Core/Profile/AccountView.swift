@@ -99,7 +99,7 @@ struct AccountView: View {
     }
     
     private var appInfoSection: some View {
-        Section("Application") {
+        Section {
             LabeledContent("Version", value: Utilities.appVersion ?? "")
             LabeledContent("Build Number", value: Utilities.buildNumber ?? "")
             Button {
@@ -108,6 +108,10 @@ struct AccountView: View {
                 Text("Contact us")
             }
             .foregroundStyle(.primary)
+        } header: {
+            Text("Application")
+        } footer: {
+            Text("Created by George Zorakis")
         }
     }
     
@@ -119,8 +123,6 @@ struct AccountView: View {
                 Text("Delete Account")
                     .foregroundStyle(.red)
             }
-        } footer: {
-            Text("Created by George Zorakis")
         }
     }
     
