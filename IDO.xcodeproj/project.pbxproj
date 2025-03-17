@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		108B353E2D88C2290008D71C /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 108B353D2D88C2290008D71C /* FirebaseAuth */; };
 		10DC4E0F2D7A44BD0040CA13 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 10DC4E0E2D7A44BD0040CA13 /* SDWebImageSwiftUI */; };
 /* End PBXBuildFile section */
 
@@ -57,6 +58,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				10DC4E0F2D7A44BD0040CA13 /* SDWebImageSwiftUI in Frameworks */,
+				108B353E2D88C2290008D71C /* FirebaseAuth in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -118,6 +120,7 @@
 			name = IDO;
 			packageProductDependencies = (
 				10DC4E0E2D7A44BD0040CA13 /* SDWebImageSwiftUI */,
+				108B353D2D88C2290008D71C /* FirebaseAuth */,
 			);
 			productName = IDO;
 			productReference = 108AC4BB2D75A171006B6096 /* IDO.app */;
@@ -203,6 +206,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				10DC4E0D2D7A44BD0040CA13 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
+				108B353C2D88C2290008D71C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 108AC4BC2D75A171006B6096 /* Products */;
@@ -585,6 +589,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		108B353C2D88C2290008D71C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.10.0;
+			};
+		};
 		10DC4E0D2D7A44BD0040CA13 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SDWebImage/SDWebImageSwiftUI.git";
@@ -596,6 +608,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		108B353D2D88C2290008D71C /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 108B353C2D88C2290008D71C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
 		10DC4E0E2D7A44BD0040CA13 /* SDWebImageSwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 10DC4E0D2D7A44BD0040CA13 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;
