@@ -18,7 +18,8 @@ struct TodoListView: View {
     
     @State private var editingItem: TodoItem? 
     @State private var itemToDelete: TodoItem?
-    
+    @State private var showAlert: AnyAppAlert?
+
     var body: some View {
         VStack {
             ScrollView {
@@ -49,21 +50,7 @@ struct TodoListView: View {
         .onChange(of: photosPickerItem) {
             onChangeOfPhotoPicker()
         }
-        .confirmationDialog("Delete Item", isPresented: Binding<Bool>(
-            get: { itemToDelete != nil },
-            set: { _ in itemToDelete = nil }
-        )) {
-            Button("Delete", role: .destructive) {
-                if let itemToDelete = itemToDelete,
-                   let index = textItems.firstIndex(where: { $0.id == itemToDelete.id }) {
-                    textItems.remove(at: index)
-                }
-            }
-            Button("Cancel", role: .cancel) {
-                itemToDelete = nil
-            }
-        }
-
+        .showCustomAlert(type: .confirmationDialog, alert: $showAlert)
     }
     
     @ViewBuilder
@@ -169,7 +156,27 @@ struct TodoListView: View {
     }
     
     private func deleteItem(at index: Int) {
-        itemToDelete = textItems[index] 
+        itemToDelete = textItems[index]
+        showAlert = AnyAppAlert(
+            title: "Delete Item",
+            subtitle: "Are you sure you want to delete this item?",
+            buttons: {
+                AnyView(
+                    Group {
+                        Button("Cancel", role: .cancel) {
+                            showAlert = nil
+                        }
+                        Button("Delete", role: .destructive) {
+                            if let item = itemToDelete, let index = textItems.firstIndex(where: { $0.id == item.id }) {
+                                textItems.remove(at: index)
+                            }
+                            showAlert = nil
+                        }
+                    }
+                )
+            }
+        )
+
     }
 }
 

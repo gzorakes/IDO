@@ -12,6 +12,7 @@ struct ChatView: View {
     @State private var chatMessages: [ChatMessageModel] = ChatMessageModel.mocks
     @State private var currentUser: UserModel? = .mock
     @State private var textFieldText: String = ""
+    @State private var showAlert: AnyAppAlert?
     
     var body: some View {
         VStack(spacing: 0) {
@@ -20,6 +21,7 @@ struct ChatView: View {
         }
         .navigationTitle(currentUser?.name ?? "Chat")
         .toolbarTitleDisplayMode(.inline)
+        .showCustomAlert(alert: $showAlert)
     }
     
     private var scrollViewSection: some View {
@@ -69,21 +71,38 @@ struct ChatView: View {
             .background(Color(uiColor: .secondarySystemBackground))
     }
     
+    private func checkIfTextIsValid(text: String) -> Bool {
+        let minimumCharacterCount = 1
+        
+        guard text.count >= minimumCharacterCount else {
+            return false
+        }
+        
+        return true
+    }
+    
     private func onSendMessagePressed() {
         guard let currentUser else { return }
+        
         let content = textFieldText
         
-        let message = ChatMessageModel(
-            id: UUID().uuidString,
-            chatId: UUID().uuidString,
-            authorId: currentUser.userId,
-            content: content,
-            dateCreated: .now
-        )
+        let isValid = checkIfTextIsValid(text: content)
         
-        chatMessages.append(message)
-        
-        textFieldText = ""
+        if isValid {
+            let message = ChatMessageModel(
+                id: UUID().uuidString,
+                chatId: UUID().uuidString,
+                authorId: currentUser.userId,
+                content: content,
+                dateCreated: .now
+            )
+            
+            chatMessages.append(message)
+            
+            textFieldText = ""
+        } else {
+            showAlert = AnyAppAlert(title: "Please add at least 1 character")
+        }
     }
 }
 
