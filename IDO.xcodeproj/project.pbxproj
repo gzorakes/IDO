@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		106AB56D2D8963B400C0DC25 /* SignInAppleAsync in Frameworks */ = {isa = PBXBuildFile; productRef = 106AB56C2D8963B400C0DC25 /* SignInAppleAsync */; };
+		106AB5832D89B9C500C0DC25 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 106AB5822D89B9C500C0DC25 /* FirebaseFirestore */; };
 		108B353E2D88C2290008D71C /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 108B353D2D88C2290008D71C /* FirebaseAuth */; };
 		10DC4E0F2D7A44BD0040CA13 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 10DC4E0E2D7A44BD0040CA13 /* SDWebImageSwiftUI */; };
 /* End PBXBuildFile section */
@@ -59,6 +60,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				10DC4E0F2D7A44BD0040CA13 /* SDWebImageSwiftUI in Frameworks */,
+				106AB5832D89B9C500C0DC25 /* FirebaseFirestore in Frameworks */,
 				108B353E2D88C2290008D71C /* FirebaseAuth in Frameworks */,
 				106AB56D2D8963B400C0DC25 /* SignInAppleAsync in Frameworks */,
 			);
@@ -81,12 +83,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		106AB5812D89B9C500C0DC25 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		108AC4B22D75A171006B6096 = {
 			isa = PBXGroup;
 			children = (
 				108AC4BD2D75A171006B6096 /* IDO */,
 				108AC4CE2D75A171006B6096 /* IDOTests */,
 				108AC4D82D75A171006B6096 /* IDOUITests */,
+				106AB5812D89B9C500C0DC25 /* Frameworks */,
 				108AC4BC2D75A171006B6096 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -124,6 +134,7 @@
 				10DC4E0E2D7A44BD0040CA13 /* SDWebImageSwiftUI */,
 				108B353D2D88C2290008D71C /* FirebaseAuth */,
 				106AB56C2D8963B400C0DC25 /* SignInAppleAsync */,
+				106AB5822D89B9C500C0DC25 /* FirebaseFirestore */,
 			);
 			productName = IDO;
 			productReference = 108AC4BB2D75A171006B6096 /* IDO.app */;
@@ -624,6 +635,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 106AB56B2D8963B400C0DC25 /* XCRemoteSwiftPackageReference "SignInAppleAsync" */;
 			productName = SignInAppleAsync;
+		};
+		106AB5822D89B9C500C0DC25 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 108B353C2D88C2290008D71C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
 		};
 		108B353D2D88C2290008D71C /* FirebaseAuth */ = {
 			isa = XCSwiftPackageProductDependency;
