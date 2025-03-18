@@ -188,7 +188,20 @@ struct AccountView: View {
     }
 }
 
-#Preview {
+#Preview("No auth") {
     AccountView()
+        .environment(\.authService, MockAuthService(user: nil))
+        .environment(AppState())
+}
+
+#Preview("Anonymous") {
+    AccountView()
+        .environment(\.authService, MockAuthService(user: UserAuthInfo.mock(isAnonymous: true)))
+        .environment(AppState())
+}
+
+#Preview("Not anonymous") {
+    AccountView()
+        .environment(\.authService, MockAuthService(user: UserAuthInfo.mock(isAnonymous: false)))
         .environment(AppState())
 }
