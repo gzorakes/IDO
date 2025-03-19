@@ -16,16 +16,37 @@ struct ImageGeneratorView: View {
     @State private var generatedImage: UIImage?
     @State private var title: String?
     
+    private let placeholderIdeas = [
+        "A decorated wedding car with ribbons",
+        "A bridal bouquet of roses and lilies",
+        "A beautifully decorated wedding hall",
+        "A romantic church ceremony",
+        "Elegant wedding invitations",
+        "A wedding table with candles and flowers",
+        "A bride in a stunning white gown",
+        "A groom in a sharp black suit",
+        "A live band playing wedding music",
+        "Shiny wedding rings on a velvet pillow",
+        "Handwritten wedding vows",
+        "Happy guests celebrating at the reception"
+    ]
+
+    @State private var currentPlaceholder: String = ""
+    
     var body: some View {
         VStack(spacing: 0) {
             Spacer()
             generatedImageSection
-                .padding(.bottom, 150)
+                .padding(.bottom, 100)
             textFieldSection
         }
         .navigationTitle("Image Generator")
         .toolbarTitleDisplayMode(.inline)
         .showCustomAlert(alert: $showAlert)
+        .onAppear {
+            currentPlaceholder = placeholderIdeas.randomElement() ?? "Car decorated with pink roses"
+        }
+
     }
     
     private var generatedImageSection: some View {
@@ -56,7 +77,7 @@ struct ImageGeneratorView: View {
     
     private var textFieldSection: some View {
         
-        TextField("“Car decorated with pink roses“", text: $textFieldText, axis: .vertical)
+        TextField("«\(currentPlaceholder)»", text: $textFieldText, axis: .vertical)
             .keyboardType(.alphabet)
             .autocorrectionDisabled()
             .padding(12)
@@ -106,15 +127,15 @@ struct ImageGeneratorView: View {
         let content = textFieldText
         let isValid = checkIfTextIsValid(text: content)
         if isValid {
-            
             isGenerating = true
             textFieldText = ""
+            
             Task {
                 try? await Task.sleep(for: .seconds(3))
                 generatedImage = UIImage(systemName: "star.fill")
                 title = content
                 isGenerating = false
-                
+                currentPlaceholder = placeholderIdeas.randomElement() ?? "Car decorated with pink roses"
             }
         } else {
             showAlert = AnyAppAlert(title: "Please add at least 3 character")
