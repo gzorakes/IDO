@@ -16,7 +16,7 @@ struct TabBarView: View {
                     Label("Notes", systemImage: "list.clipboard")
                 }
                 
-            AIChatView()
+            ImageGeneratorView()
                 .tabItem {
                     Label("AI Chat", systemImage: "brain.head.profile")
                 }
