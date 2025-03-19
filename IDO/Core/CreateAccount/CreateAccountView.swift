@@ -64,6 +64,6 @@ struct CreateAccountView: View {
 #Preview {
     CreateAccountView()
         .environment(AppState())
-        .environment(UserManager(service: FirebaseUserService()))
+        .environment(UserManager(services: MockUserServices()))
         .environment(AuthManager(service: MockAuthService()))
 }

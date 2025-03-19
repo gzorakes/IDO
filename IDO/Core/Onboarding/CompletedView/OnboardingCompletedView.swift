@@ -70,6 +70,6 @@ struct OnboardingCompletedView: View {
 
 #Preview {
     OnboardingCompletedView(selectedColor: .blue, name: "George", weddingDate: .now, daysUntilWedding: 15)
-        .environment(UserManager(service: MockUserService()))
+        .environment(UserManager(services: MockUserServices()))
         .environment(AppState())
 }
