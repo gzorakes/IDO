@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct UserAuthInfo: Sendable {
+struct UserAuthInfo: Sendable, Equatable {
     let uid: String
     let email: String?
     let isAnonymous: Bool

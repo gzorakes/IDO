@@ -97,7 +97,7 @@ struct OnboardingInfoView: View {
     
     private func ctaButton(selectedColor: Color, name: String, daysUntilWedding: Int) -> some View {
         NavigationLink {
-            OnboardingCompletedView(selectedColor: selectedColor, name: name, daysUntilWedding: daysUntilWedding)
+            OnboardingCompletedView(selectedColor: selectedColor, name: name, weddingDate: weddingDate ?? .now, daysUntilWedding: daysUntilWedding)
         } label: {
             Text("Continue")
                 .callToActionButton()

@@ -11,8 +11,9 @@ struct AccountView: View {
     
     @Environment(AppState.self) private var appState
     @Environment(AuthManager.self) private var authManager
+    @Environment(UserManager.self) private var userManager
     @Environment(\.dismiss) private var dismiss
-    @State private var currentUser: UserModel? = .mocks[1]
+    @State private var currentUser: UserModel?
     @State private var isAnonymousUser: Bool = false
     @State private var showCreateAccountView: Bool = false
     @State private var showAlert: AnyAppAlert?
@@ -40,6 +41,9 @@ struct AccountView: View {
             .onAppear {
                 setAnonymousAccountStatus()
             }
+            .task {
+                self.currentUser = userManager.currentUser
+            }
             .showCustomAlert(alert: $showAlert)
         }
     }
@@ -49,7 +53,7 @@ struct AccountView: View {
             ZStack {
                 Circle()
                     .overlay {
-                        ImageView(imageName: currentUser?.role == "Groom" ? "suit2" : "dress2")
+                        ImageView(imageName: (currentUser?.profileColorHex == "#6482AD" || currentUser?.profileColorHex == "#91BFFF") ? "suit2" : "dress2")
                             .clipShape(Circle())
                             .opacity(0.8)
                     }
@@ -141,6 +145,7 @@ struct AccountView: View {
         Task {
             do {
                 try authManager.signOut()
+                userManager.signOut()
                 await dismissScreen()
             } catch {
                 showAlert = AnyAppAlert(error: error)
@@ -172,6 +177,7 @@ struct AccountView: View {
         Task {
             do {
                 try await authManager.deleteAccount()
+                try await userManager.deleteCurrentUser()
                 await dismissScreen()
             } catch {
                 showAlert = AnyAppAlert(error: error)
@@ -191,17 +197,20 @@ struct AccountView: View {
 #Preview("No auth") {
     AccountView()
         .environment(AuthManager(service: MockAuthService(user: nil)))
+        .environment(UserManager(service: MockUserService(user: nil)))
         .environment(AppState())
 }
 
 #Preview("Anonymous") {
     AccountView()
         .environment(AuthManager(service: MockAuthService(user: UserAuthInfo.mock(isAnonymous: true))))
+        .environment(UserManager(service: MockUserService(user: .mock)))
         .environment(AppState())
 }
 
 #Preview("Not anonymous") {
     AccountView()
         .environment(AuthManager(service: MockAuthService(user: UserAuthInfo.mock(isAnonymous: false))))
+        .environment(UserManager(service: MockUserService(user: .mock)))
         .environment(AppState())
 }

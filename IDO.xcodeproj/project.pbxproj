@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1044E7632D89EEF30013ED25 /* SwiftfulFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 1044E7622D89EEF30013ED25 /* SwiftfulFirestore */; };
 		106AB56D2D8963B400C0DC25 /* SignInAppleAsync in Frameworks */ = {isa = PBXBuildFile; productRef = 106AB56C2D8963B400C0DC25 /* SignInAppleAsync */; };
 		106AB5832D89B9C500C0DC25 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 106AB5822D89B9C500C0DC25 /* FirebaseFirestore */; };
 		108B353E2D88C2290008D71C /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 108B353D2D88C2290008D71C /* FirebaseAuth */; };
@@ -36,9 +37,22 @@
 		108AC4D52D75A171006B6096 /* IDOUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = IDOUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		10EDA5652D89FCA70025EF8F /* Exceptions for "IDO" folder in "IDO" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 108AC4BA2D75A171006B6096 /* IDO */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		108AC4BD2D75A171006B6096 /* IDO */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				10EDA5652D89FCA70025EF8F /* Exceptions for "IDO" folder in "IDO" target */,
+			);
 			path = IDO;
 			sourceTree = "<group>";
 		};
@@ -63,6 +77,7 @@
 				106AB5832D89B9C500C0DC25 /* FirebaseFirestore in Frameworks */,
 				108B353E2D88C2290008D71C /* FirebaseAuth in Frameworks */,
 				106AB56D2D8963B400C0DC25 /* SignInAppleAsync in Frameworks */,
+				1044E7632D89EEF30013ED25 /* SwiftfulFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -135,6 +150,7 @@
 				108B353D2D88C2290008D71C /* FirebaseAuth */,
 				106AB56C2D8963B400C0DC25 /* SignInAppleAsync */,
 				106AB5822D89B9C500C0DC25 /* FirebaseFirestore */,
+				1044E7622D89EEF30013ED25 /* SwiftfulFirestore */,
 			);
 			productName = IDO;
 			productReference = 108AC4BB2D75A171006B6096 /* IDO.app */;
@@ -222,6 +238,7 @@
 				10DC4E0D2D7A44BD0040CA13 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
 				108B353C2D88C2290008D71C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				106AB56B2D8963B400C0DC25 /* XCRemoteSwiftPackageReference "SignInAppleAsync" */,
+				1044E7612D89EEF30013ED25 /* XCRemoteSwiftPackageReference "SwiftfulFirestore" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 108AC4BC2D75A171006B6096 /* Products */;
@@ -428,11 +445,11 @@
 				DEVELOPMENT_TEAM = 3KD3485D64;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = IDO/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "IDO!";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
@@ -444,7 +461,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.georgezorakis.IDO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -465,11 +482,11 @@
 				DEVELOPMENT_TEAM = 3KD3485D64;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = IDO/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "IDO!";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
@@ -481,7 +498,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.georgezorakis.IDO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -604,6 +621,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		1044E7612D89EEF30013ED25 /* XCRemoteSwiftPackageReference "SwiftfulFirestore" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SwiftfulThinking/SwiftfulFirestore.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.0.2;
+			};
+		};
 		106AB56B2D8963B400C0DC25 /* XCRemoteSwiftPackageReference "SignInAppleAsync" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SwiftfulThinking/SignInAppleAsync.git";
@@ -631,6 +656,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		1044E7622D89EEF30013ED25 /* SwiftfulFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1044E7612D89EEF30013ED25 /* XCRemoteSwiftPackageReference "SwiftfulFirestore" */;
+			productName = SwiftfulFirestore;
+		};
 		106AB56C2D8963B400C0DC25 /* SignInAppleAsync */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 106AB56B2D8963B400C0DC25 /* XCRemoteSwiftPackageReference "SignInAppleAsync" */;
