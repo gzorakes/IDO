@@ -9,6 +9,8 @@ import SwiftUI
 
 struct ImageGeneratorView: View {
     
+    @Environment(AIManager.self) private var aiManager
+    
     @State private var textFieldText: String = ""
     @State private var showAlert: AnyAppAlert?
     
@@ -16,54 +18,57 @@ struct ImageGeneratorView: View {
     @State private var generatedImage: UIImage?
     @State private var title: String?
     
-    private let placeholderIdeas = [
-        "A decorated wedding car with ribbons",
-        "A bridal bouquet of roses and lilies",
-        "A beautifully decorated wedding hall",
-        "A romantic church ceremony",
-        "Elegant wedding invitations",
-        "A wedding table with candles and flowers",
-        "A bride in a stunning white gown",
-        "A groom in a sharp black suit",
-        "A live band playing wedding music",
-        "Shiny wedding rings on a velvet pillow",
-        "Handwritten wedding vows",
-        "Happy guests celebrating at the reception"
-    ]
-
-    @State private var currentPlaceholder: String = ""
     
     var body: some View {
         VStack(spacing: 0) {
-            Spacer()
+            
             generatedImageSection
-                .padding(.bottom, 100)
+            Spacer()
             textFieldSection
         }
         .navigationTitle("Image Generator")
         .toolbarTitleDisplayMode(.inline)
         .showCustomAlert(alert: $showAlert)
-        .onAppear {
-            currentPlaceholder = placeholderIdeas.randomElement() ?? "Car decorated with pink roses"
-        }
-
     }
     
     private var generatedImageSection: some View {
         VStack {
-            if generatedImage != nil {
+            if let generatedImage = generatedImage {
+                Image(uiImage: generatedImage)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: 320)
+                    .clipShape(RoundedRectangle(cornerRadius: 16))
+            } else {
                 RoundedRectangle(cornerRadius: 16)
                     .fill(Color.secondary.opacity(0.3))
-                    .frame(height: 350)
+                    .frame(height: 320)
                     .overlay {
-                        ZStack {
-                            Image(systemName: "star.fill")
-                                .resizable()
-                                .scaledToFill()
+                        VStack(alignment: .leading) {
+                            Text("Examples")
+                            
+                            Group {
+                                Text("«Groom in a navy suit, black bow tie»")
+                                    
+                                Text("«Bride in white lace gown, holding roses»")
+                                Text("«Sunset beach ceremony, couple under an arch»")
+                                Text("«Santorini wedding, blue domes, breathtaking views»")
+                                    
+                            }
+                            .font(.footnote)
+                            .italic()
+                            
+                            Spacer()
+                            
+                            Text("AI can make mistakes. Τhe result is not always what you expect")
+                                .italic()
+                                .font(.caption2)
                         }
+                        .baselineOffset(10)
+                        .foregroundStyle(.secondary)
+                        .padding(8)
                     }
                     .clipShape(RoundedRectangle(cornerRadius: 16))
-                    
             }
             
             if let title {
@@ -77,7 +82,7 @@ struct ImageGeneratorView: View {
     
     private var textFieldSection: some View {
         
-        TextField("«\(currentPlaceholder)»", text: $textFieldText, axis: .vertical)
+        TextField("Type...", text: $textFieldText)
             .keyboardType(.alphabet)
             .autocorrectionDisabled()
             .padding(12)
@@ -131,11 +136,14 @@ struct ImageGeneratorView: View {
             textFieldText = ""
             
             Task {
-                try? await Task.sleep(for: .seconds(3))
-                generatedImage = UIImage(systemName: "star.fill")
-                title = content
+                do {
+                    generatedImage = try await aiManager.generateImage(input: content)
+                    
+                    title = content
+                } catch {
+                    print("Error generating image: \(error)")
+                }
                 isGenerating = false
-                currentPlaceholder = placeholderIdeas.randomElement() ?? "Car decorated with pink roses"
             }
         } else {
             showAlert = AnyAppAlert(title: "Please add at least 3 character")
@@ -146,5 +154,6 @@ struct ImageGeneratorView: View {
 #Preview {
     NavigationStack {
         ImageGeneratorView()
+            .environment(AIManager(service: MockAIService()))
     }
 }

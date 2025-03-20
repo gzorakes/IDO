@@ -18,7 +18,7 @@ struct TabBarView: View {
                 
             ImageGeneratorView()
                 .tabItem {
-                    Label("AI Chat", systemImage: "brain.head.profile")
+                    Label("AI Generator", systemImage: "sparkles")
                 }
             AccountView()
                 .tabItem {
