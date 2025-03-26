@@ -16,6 +16,7 @@ struct TodoItem: Identifiable {
         TodoItem(id: "1", content: .text("Book event hall"), categoryId: "hall"),
         TodoItem(id: "2", content: .text("Visit potential venues"), categoryId: "hall"),
         TodoItem(id: "3", content: .text("Sign venue contract"), categoryId: "hall"),
+        TodoItem(id: "24", content: .image(UIImage(systemName: "star.fill")!), categoryId: "hall"),
         
         TodoItem(id: "4", content: .text("Book church ceremony"), categoryId: "church"),
         TodoItem(id: "5", content: .text("Meet with priest"), categoryId: "church"),

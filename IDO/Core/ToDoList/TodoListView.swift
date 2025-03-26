@@ -16,20 +16,14 @@ struct TodoListView: View {
     @State private var photosPickerItem: PhotosPickerItem?
     @State private var selectedImage: ImageWrapper?
     
-    @State private var editingItem: TodoItem? 
-    @State private var itemToDelete: TodoItem?
-    @State private var showAlert: AnyAppAlert?
-
+    @State private var editingItem: TodoItem?
+    
     var body: some View {
-        VStack {
-            ScrollView {
-                LazyVStack(spacing: 16) {
-                    todoItems
-                }
-                .padding()
-            }
-            .scrollContentBackground(.hidden)
+        List {
+            todoItems
+                .removeListRowFormatting()
         }
+        .listSectionSpacing(14)
         .navigationTitle(category.title)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
@@ -50,41 +44,25 @@ struct TodoListView: View {
         .onChange(of: photosPickerItem) {
             onChangeOfPhotoPicker()
         }
-        .showCustomAlert(type: .confirmationDialog, alert: $showAlert)
     }
     
     @ViewBuilder
     private var todoItems: some View {
         if !textItems.isEmpty {
-            ForEach(0..<textItems.count, id: \.self) { index in
-                if index % 2 == 0 {
-                    HStack(spacing: 16) {
-                        TodoListItemView(
-                            selectedImage: $selectedImage,
-                            todoItem: textItems[index],
-                            onEdit: {
-                                editingItem = textItems[index]
-                            },
-                            onDelete: {
-                                deleteItem(at: index)
-                            }
-                        )
-                        
-                        if index + 1 < textItems.count {
-                            TodoListItemView(
-                                selectedImage: $selectedImage,
-                                todoItem: textItems[index + 1],
-                                onEdit: {
-                                    editingItem = textItems[index + 1]
-                                },
-                                onDelete: {
-                                    deleteItem(at: index + 1)
-                                }
-                            )
-                        } else {
-                            Rectangle()
-                                .fill(Color.clear)
-                                .frame(width: 170, height: 100)
+            ForEach(textItems) { item in
+                Section {
+                    TodoListItemView(
+                        selectedImage: $selectedImage,
+                        todoItem: item,
+                        onEdit: {
+                            editingItem = item
+                        }
+                    )
+                    .swipeActions(allowsFullSwipe: false) {
+                        Button(role: .destructive) {
+                            deleteItem(item)
+                        } label: {
+                            Label("Delete", systemImage: "trash")
                         }
                     }
                 }
@@ -92,8 +70,11 @@ struct TodoListView: View {
         } else {
             Text("Your list is empty...")
                 .foregroundStyle(.secondary)
+                .padding(40)
+                .frame(maxWidth: .infinity)
         }
     }
+    
     
     private var toolBarButtons: some ToolbarContent {
         ToolbarItem(placement: .topBarTrailing) {
@@ -119,7 +100,7 @@ struct TodoListView: View {
                     id: UUID().uuidString,
                     content: content,
                     categoryId: category.rawValue)
-                textItems.append(newItem)
+                textItems.insert(newItem, at: 0)
                 imageItem = nil
             }
         }, itemToEdit: nil)
@@ -151,41 +132,23 @@ struct TodoListView: View {
                         id: UUID().uuidString,
                         content: .image(image),
                         categoryId: category.rawValue)
-                    textItems.append(newItem)
+                    textItems.insert(newItem, at: 0)
                 }
             }
             photosPickerItem = nil
         }
     }
     
-    private func deleteItem(at index: Int) {
-        itemToDelete = textItems[index]
-        showAlert = AnyAppAlert(
-            title: "Delete Item",
-            subtitle: "Are you sure you want to delete this item?",
-            buttons: {
-                AnyView(
-                    Group {
-                        Button("Cancel", role: .cancel) {
-                            showAlert = nil
-                        }
-                        Button("Delete", role: .destructive) {
-                            if let item = itemToDelete, let index = textItems.firstIndex(where: { $0.id == item.id }) {
-                                textItems.remove(at: index)
-                            }
-                            showAlert = nil
-                        }
-                    }
-                )
-            }
-        )
-
+    private func deleteItem(_ item: TodoItem) {
+        if let index = textItems.firstIndex(where: { $0.id == item.id }) {
+            textItems.remove(at: index)
+        }
     }
 }
 
 #Preview {
     NavigationStack {
-        TodoListView(category: CategoryModel.car)
+        TodoListView(category: CategoryModel.hall)
     }
 }
 
