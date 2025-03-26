@@ -13,7 +13,7 @@ struct AddNoteView: View {
     @FocusState private var isTextFieldFocused: Bool
     @State private var newNote: String = ""
     var onSave: (String) -> Void
-    var itemToEdit: TodoItem?
+    var itemToEdit: TodoItemModel?
     
     var body: some View {
         NavigationView {

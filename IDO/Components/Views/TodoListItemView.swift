@@ -10,7 +10,7 @@ import SwiftUI
 struct TodoListItemView: View {
     
     @Binding var selectedImage: ImageWrapper?
-    var todoItem: TodoItem
+    var todoItem: TodoItemModel
     var onEdit: () -> Void
 
     var body: some View {
@@ -70,8 +70,9 @@ struct TodoListItemView: View {
         Section {
             TodoListItemView(
                 selectedImage: .constant(nil),
-                todoItem: TodoItem(
+                todoItem: TodoItemModel(
                     id: "1234",
+                    authorId: "user1",
                     content: .text("This is an item"),
                     categoryId: "car"
                 ),
@@ -83,8 +84,9 @@ struct TodoListItemView: View {
         Section {
             TodoListItemView(
                 selectedImage: .constant(nil),
-                todoItem: TodoItem(
+                todoItem: TodoItemModel(
                     id: "1234",
+                    authorId: "user1",
                     content: .text("This is an item"),
                     categoryId: "car"
                 ),
@@ -96,8 +98,9 @@ struct TodoListItemView: View {
         Section {
             TodoListItemView(
                 selectedImage: .constant(nil),
-                todoItem: TodoItem(
+                todoItem: TodoItemModel(
                     id: "1234",
+                    authorId: "user1",
                     content: .image(UIImage(systemName: "photo.artframe")!),
                     categoryId: "car"
                 ),

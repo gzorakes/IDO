@@ -9,14 +9,17 @@ import SwiftUI
 import PhotosUI
 
 struct TodoListView: View {
+    
+    @Environment(AuthManager.self) private var authManager
+    @Environment(TodoManager.self) private var todoManager
+    
     var category: CategoryModel
-    @State private var textItems: [TodoItem] = []
+    @State private var textItems: [TodoItemModel] = []
     @State private var isShowingSheet = false
     @State private var imageItem: UIImage?
     @State private var photosPickerItem: PhotosPickerItem?
     @State private var selectedImage: ImageWrapper?
-    
-    @State private var editingItem: TodoItem?
+    @State private var editingItem: TodoItemModel?
     
     var body: some View {
         List {
@@ -30,7 +33,7 @@ struct TodoListView: View {
             toolBarButtons
         }
         .onAppear {
-            textItems = TodoItem.mocks.filter { $0.categoryId == category.rawValue }
+            textItems = TodoItemModel.mocks.filter { $0.categoryId == category.rawValue }
         }
         .sheet(isPresented: $isShowingSheet) {
             addTextNoteSheet
@@ -95,18 +98,26 @@ struct TodoListView: View {
     private var addTextNoteSheet: some View {
         AddNoteView(onSave: { newNote in
             if !newNote.isEmpty || imageItem != nil {
-                let content: TodoContent = imageItem.map { .image($0) } ?? .text(newNote)
-                let newItem = TodoItem(
-                    id: UUID().uuidString,
-                    content: content,
-                    categoryId: category.rawValue)
-                textItems.insert(newItem, at: 0)
-                imageItem = nil
+                Task {
+                    let content: TodoContent = imageItem.map { .image($0) } ?? .text(newNote)
+                    let uid = try authManager.getAuthId()
+                    
+                    let newItem = TodoItemModel(
+                        id: UUID().uuidString,
+                        authorId: uid,
+                        content: content,
+                        categoryId: category.rawValue)
+                    
+                    try await todoManager.createTodo(todoItem: newItem )
+                    
+                    textItems.insert(newItem, at: 0)
+                    imageItem = nil
+                }
             }
         }, itemToEdit: nil)
     }
     
-    private func editTextNoteSheet(item: TodoItem) -> some View {
+    private func editTextNoteSheet(item: TodoItemModel) -> some View {
         AddNoteView(onSave: { updatedNote in
             if let index = textItems.firstIndex(where: { $0.id == item.id }) {
                 textItems[index].content = .text(updatedNote)
@@ -128,8 +139,9 @@ struct TodoListView: View {
             if let photosPickerItem,
                let data = try? await photosPickerItem.loadTransferable(type: Data.self) {
                 if let image = UIImage(data: data) {
-                    let newItem = TodoItem(
+                    let newItem = TodoItemModel(
                         id: UUID().uuidString,
+                        authorId: "user1",
                         content: .image(image),
                         categoryId: category.rawValue)
                     textItems.insert(newItem, at: 0)
@@ -139,7 +151,7 @@ struct TodoListView: View {
         }
     }
     
-    private func deleteItem(_ item: TodoItem) {
+    private func deleteItem(_ item: TodoItemModel) {
         if let index = textItems.firstIndex(where: { $0.id == item.id }) {
             textItems.remove(at: index)
         }
@@ -149,6 +161,8 @@ struct TodoListView: View {
 #Preview {
     NavigationStack {
         TodoListView(category: CategoryModel.hall)
+            .environment(AuthManager(service: MockAuthService(user: .mock())))
+            .environment(TodoManager(service: MockTodoService()))
     }
 }
 

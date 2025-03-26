@@ -19,6 +19,7 @@ struct IDOApp: App {
                 .environment(delegate.dependencies.authManager)
                 .environment(delegate.dependencies.userManager)
                 .environment(delegate.dependencies.aiManager)
+                .environment(delegate.dependencies.todoManager)
         }
     }
 }
@@ -56,10 +57,12 @@ struct Dependencies {
     let authManager: AuthManager
     let userManager: UserManager
     let aiManager: AIManager
+    let todoManager: TodoManager
     
     init() {
         authManager = AuthManager(service: FirebaseAuthService())
         userManager = UserManager(services: ProductionUserServices())
         aiManager = AIManager(service: OpenAIService())
+        todoManager = TodoManager(service: FirebaseTodoService())
     }
 }
