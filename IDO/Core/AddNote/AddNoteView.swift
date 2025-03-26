@@ -27,8 +27,8 @@ struct AddNoteView: View {
                         .focused($isTextFieldFocused)
                         .onAppear {
                             isTextFieldFocused = true
-                            if let itemToEdit = itemToEdit {
-                                newNote = itemToEdit.text
+                            if case let .text(text) = itemToEdit?.content {
+                                newNote = text
                             }
                         }
                     

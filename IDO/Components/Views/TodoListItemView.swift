@@ -22,8 +22,19 @@ struct TodoListItemView: View {
                 .cornerRadius(16)
                 .shadow(radius: 5)
                 
-            
-            if let image = todoItem.image {
+            switch todoItem.content {
+            case .text(let text):
+                ScrollView {
+                    VStack {
+                        Text(text)
+                            .padding(6)
+                            .foregroundStyle(.white)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .frame(width: 170, height: 100)
+                
+            case .image(let image):
                 Image(uiImage: image)
                     .resizable()
                     .scaledToFill()
@@ -33,18 +44,6 @@ struct TodoListItemView: View {
                     .onTapGesture {
                         selectedImage = ImageWrapper(image: image)
                     }
-            } else {
-                ScrollView {
-                    VStack {
-                        Text(todoItem.text)
-                            .padding(6)
-                            .foregroundStyle(.white)
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    
-                }
-                
-                .frame(width: 170, height: 100)
             }
         }
         .onLongPressGesture {
@@ -62,8 +61,7 @@ struct TodoListItemView: View {
         selectedImage: .constant(nil),
         todoItem: TodoItem(
             id: "1234",
-            text: "This is an item",
-            image: nil,
+            content: .text("This is an item"),
             categoryId: "car"
         ),
         onEdit: { },

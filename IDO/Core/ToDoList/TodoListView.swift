@@ -114,10 +114,10 @@ struct TodoListView: View {
     private var addTextNoteSheet: some View {
         AddNoteView(onSave: { newNote in
             if !newNote.isEmpty || imageItem != nil {
+                let content: TodoContent = imageItem.map { .image($0) } ?? .text(newNote)
                 let newItem = TodoItem(
                     id: UUID().uuidString,
-                    text: newNote,
-                    image: imageItem,
+                    content: content,
                     categoryId: category.rawValue)
                 textItems.append(newItem)
                 imageItem = nil
@@ -128,7 +128,7 @@ struct TodoListView: View {
     private func editTextNoteSheet(item: TodoItem) -> some View {
         AddNoteView(onSave: { updatedNote in
             if let index = textItems.firstIndex(where: { $0.id == item.id }) {
-                textItems[index].text = updatedNote
+                textItems[index].content = .text(updatedNote)
             }
         }, itemToEdit: item)
     }
@@ -147,7 +147,10 @@ struct TodoListView: View {
             if let photosPickerItem,
                let data = try? await photosPickerItem.loadTransferable(type: Data.self) {
                 if let image = UIImage(data: data) {
-                    let newItem = TodoItem(id: UUID().uuidString, text: "", image: image, categoryId: category.rawValue)
+                    let newItem = TodoItem(
+                        id: UUID().uuidString,
+                        content: .image(image),
+                        categoryId: category.rawValue)
                     textItems.append(newItem)
                 }
             }
