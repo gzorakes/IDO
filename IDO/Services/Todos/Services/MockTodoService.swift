@@ -9,20 +9,26 @@ import SwiftUI
 
 struct MockTodoService: TodoService {
     
+    let todos: [TodoItemModel]
+    
+    init(todos: [TodoItemModel] = TodoItemModel.mocks) {
+        self.todos = todos
+    }
+    
     func createTodo(todoItem: TodoItemModel) async throws {
         
     }
     
     func getTodos() async throws -> [TodoItemModel] {
-        TodoItemModel.mocks
+        todos
     }
     
     func getTodosForCategory(category: String) async throws -> [TodoItemModel] {
-        TodoItemModel.mocks.filter { $0.categoryId == category }
+        todos.filter { $0.categoryId == category }
     }
     
     func getTodosForAuthor(userId: String, category: String) async throws -> [TodoItemModel] {
-        TodoItemModel.mocks
+        todos
     }
     
     func updateTodo(todoItem: TodoItemModel) async throws {

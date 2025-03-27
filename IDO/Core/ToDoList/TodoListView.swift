@@ -180,8 +180,10 @@ struct TodoListView: View {
 #Preview {
     NavigationStack {
         TodoListView(category: CategoryModel.hall)
-            .environment(AuthManager(service: MockAuthService(user: .mock())))
-            .environment(TodoManager(service: MockTodoService()))
+            .previewEnvironment()
     }
 }
+
+
+
 

@@ -66,3 +66,15 @@ struct Dependencies {
         todoManager = TodoManager(service: FirebaseTodoService())
     }
 }
+
+
+extension View {
+    func previewEnvironment(isSignedIn: Bool = true) -> some View {
+        self
+            .environment(AuthManager(service: MockAuthService(user: isSignedIn ? .mock() : nil)))
+            .environment(UserManager(services: MockUserServices(user: isSignedIn ? .mock : nil)))
+            .environment(TodoManager(service: MockTodoService()))
+            .environment(AppState())
+            .environment(AIManager(service: MockAIService()))
+    }
+}
