@@ -39,7 +39,8 @@ struct TodoListItemView: View {
                     VStack {
                         Text(text)
                             .padding(6)
-                            .foregroundStyle(.white)
+                            .foregroundStyle(.black)
+                            .fontWeight(.medium)
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                 }

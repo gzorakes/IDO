@@ -41,4 +41,8 @@ struct FirebaseTodoService: TodoService {
         try collection.document(todoItem.id).setData(from: todoItem, merge: true)
     }
     
+    func deleteTodo(todoId: String) async throws {
+        try await collection.document(todoId).delete()
+    }
+    
 }

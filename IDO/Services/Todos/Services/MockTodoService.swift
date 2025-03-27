@@ -34,4 +34,8 @@ struct MockTodoService: TodoService {
     func updateTodo(todoItem: TodoItemModel) async throws {
         
     }
+    
+    func deleteTodo(todoId: String) async throws {
+        
+    }
 }

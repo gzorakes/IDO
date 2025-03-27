@@ -13,4 +13,5 @@ protocol TodoService: Sendable {
     func getTodosForCategory(category: String) async throws -> [TodoItemModel]
     func getTodosForAuthor(userId: String, category: String) async throws -> [TodoItemModel]
     func updateTodo(todoItem: TodoItemModel) async throws
+    func deleteTodo(todoId: String) async throws
 }

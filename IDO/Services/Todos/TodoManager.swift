@@ -37,4 +37,8 @@ class TodoManager  {
     func updateTodo(todoItem: TodoItemModel) async throws {
         try await service.updateTodo(todoItem: todoItem)
     }
+    
+    func deleteTodo(todoId: String) async throws {
+        try await service.deleteTodo(todoId: todoId)
+    }
 }

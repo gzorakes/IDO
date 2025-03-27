@@ -130,7 +130,6 @@ struct TodoListView: View {
         AddNoteView(onSave: { updatedNote in
             Task {
                 if let index = todoItems.firstIndex(where: { $0.id == item.id }) {
-                    // Create a new item with updated content
                     var updatedItem = todoItems[index]
                     updatedItem.content = .text(updatedNote)
                     
@@ -171,8 +170,18 @@ struct TodoListView: View {
     }
     
     private func deleteItem(_ item: TodoItemModel) {
-        if let index = todoItems.firstIndex(where: { $0.id == item.id }) {
-            todoItems.remove(at: index)
+        Task {
+            do {
+                // Delete from Firestore
+                try await todoManager.deleteTodo(todoId: item.id)
+                
+                // Remove from local state
+                if let index = todoItems.firstIndex(where: { $0.id == item.id }) {
+                    todoItems.remove(at: index)
+                }
+            } catch {
+                print("Error deleting todo: \(error)")
+            }
         }
     }
 }
