@@ -14,7 +14,7 @@ struct TodoListView: View {
     @Environment(TodoManager.self) private var todoManager
     
     var category: CategoryModel
-    @State private var textItems: [TodoItemModel] = []
+    @State private var todoItems: [TodoItemModel] = []
     @State private var isShowingSheet = false
     @State private var imageItem: UIImage?
     @State private var photosPickerItem: PhotosPickerItem?
@@ -23,17 +23,17 @@ struct TodoListView: View {
     
     var body: some View {
         List {
-            todoItems
+            todoItemsList
                 .removeListRowFormatting()
         }
-        .listSectionSpacing(14)
+        .listSectionSpacing(12)
         .navigationTitle(category.title)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             toolBarButtons
         }
-        .onAppear {
-            textItems = TodoItemModel.mocks.filter { $0.categoryId == category.rawValue }
+        .task {
+            await loadTodos()
         }
         .sheet(isPresented: $isShowingSheet) {
             addTextNoteSheet
@@ -49,10 +49,19 @@ struct TodoListView: View {
         }
     }
     
+    private func loadTodos() async {
+        do {
+            let currentUserId = try authManager.getAuthId()
+            todoItems = try await todoManager.getTodosForAuthor(userId: currentUserId, category: category.rawValue)
+        } catch {
+            print("Error loading todo items")
+        }
+    }
+    
     @ViewBuilder
-    private var todoItems: some View {
-        if !textItems.isEmpty {
-            ForEach(textItems) { item in
+    private var todoItemsList: some View {
+        if !todoItems.isEmpty {
+            ForEach(todoItems) { item in
                 Section {
                     TodoListItemView(
                         selectedImage: $selectedImage,
@@ -110,7 +119,7 @@ struct TodoListView: View {
                     
                     try await todoManager.createTodo(todoItem: newItem )
                     
-                    textItems.insert(newItem, at: 0)
+                    todoItems.insert(newItem, at: 0)
                     imageItem = nil
                 }
             }
@@ -119,8 +128,18 @@ struct TodoListView: View {
     
     private func editTextNoteSheet(item: TodoItemModel) -> some View {
         AddNoteView(onSave: { updatedNote in
-            if let index = textItems.firstIndex(where: { $0.id == item.id }) {
-                textItems[index].content = .text(updatedNote)
+            Task {
+                if let index = todoItems.firstIndex(where: { $0.id == item.id }) {
+                    // Create a new item with updated content
+                    var updatedItem = todoItems[index]
+                    updatedItem.content = .text(updatedNote)
+                    
+                    // Update in database
+                    try await todoManager.updateTodo(todoItem: updatedItem)
+                    
+                    // Update local state
+                    todoItems[index] = updatedItem
+                }
             }
         }, itemToEdit: item)
     }
@@ -144,7 +163,7 @@ struct TodoListView: View {
                         authorId: "user1",
                         content: .image(image),
                         categoryId: category.rawValue)
-                    textItems.insert(newItem, at: 0)
+                    todoItems.insert(newItem, at: 0)
                 }
             }
             photosPickerItem = nil
@@ -152,8 +171,8 @@ struct TodoListView: View {
     }
     
     private func deleteItem(_ item: TodoItemModel) {
-        if let index = textItems.firstIndex(where: { $0.id == item.id }) {
-            textItems.remove(at: index)
+        if let index = todoItems.firstIndex(where: { $0.id == item.id }) {
+            todoItems.remove(at: index)
         }
     }
 }

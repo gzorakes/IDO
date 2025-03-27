@@ -6,25 +6,37 @@
 //
 
 import SwiftUI
+import IdentifiableByString
 
-struct TodoItemModel: Identifiable, Codable {
+struct TodoItemModel: Identifiable, Codable, StringIdentifiable {
     let id: String
     let authorId: String
     var content: TodoContent
-    var categoryId: String
+    let categoryId: String
+    let createdAt: Date
     
+    
+    init(id: String, authorId: String, content: TodoContent, categoryId: String, createdAt: Date = Date()) {
+        self.id = id
+        self.authorId = authorId
+        self.content = content
+        self.categoryId = categoryId
+        self.createdAt = createdAt
+    }
+
     enum CodingKeys: String, CodingKey {
         case id
         case authorId = "author_id"
         case content
         case categoryId = "category_id"
+        case createdAt = "created_at"
     }
     
     static let mocks: [TodoItemModel] = [
         TodoItemModel(id: "1", authorId: "user1", content: .text("Book event hall"), categoryId: "hall"),
         TodoItemModel(id: "2", authorId: "user1", content: .text("Visit potential venues"), categoryId: "hall"),
         TodoItemModel(id: "3", authorId: "user1", content: .text("Sign venue contract"), categoryId: "hall"),
-        TodoItemModel(id: "24", authorId: "user1", content: .image(UIImage(systemName: "star.fill")!), categoryId: "hall"),
+        TodoItemModel(id: "24", authorId: "user1", content: .image(UIImage(named: "music2")!), categoryId: "hall"),
         
         TodoItemModel(id: "4", authorId: "user1", content: .text("Book church ceremony"), categoryId: "church"),
         TodoItemModel(id: "5", authorId: "user1", content: .text("Meet with priest"), categoryId: "church"),
