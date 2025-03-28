@@ -30,7 +30,7 @@ struct UserAuthInfo: Sendable, Equatable {
     
     static func mock(isAnonymous: Bool = false) -> Self {
         UserAuthInfo(
-            uid: "mock_user_123",
+            uid: "user1",
             email: "hello@test.com",
             isAnonymous: isAnonymous,
             creationDate: .now,

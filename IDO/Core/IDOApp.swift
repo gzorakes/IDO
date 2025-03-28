@@ -47,10 +47,22 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         FirebaseApp.configure()
         
-        dependencies = Dependencies()
+        #if MOCK
+        dependencies = Dependencies(config: .mock(isSignedIn: true))
+        #elseif DEV
+        dependencies = Dependencies(config: .dev)
+        #else
+        dependencies = Dependencies(config: .prod)
+        #endif
+
         return true
     }
 }
+
+enum BuildConfiguration {
+    case mock(isSignedIn: Bool), dev, prod
+}
+
 
 @MainActor
 struct Dependencies {
@@ -59,11 +71,32 @@ struct Dependencies {
     let aiManager: AIManager
     let todoManager: TodoManager
     
-    init() {
-        authManager = AuthManager(service: FirebaseAuthService())
-        userManager = UserManager(services: ProductionUserServices())
-        aiManager = AIManager(service: OpenAIService())
-        todoManager = TodoManager(service: FirebaseTodoService())
+    init(config: BuildConfiguration) {
+        
+        // Mock - mock dependencies
+        // Development - production dependencies + some extra dev tools
+        // Production - production dependencies
+
+        switch config {
+        case .mock(isSignedIn: let isSignedIn):
+            authManager = AuthManager(service: MockAuthService(user: isSignedIn ? .mock() : nil))
+            userManager = UserManager(services: MockUserServices(user: isSignedIn ? .mock : nil))
+            aiManager = AIManager(service: MockAIService())
+            todoManager = TodoManager(service: MockTodoService())
+
+        case .dev:
+            authManager = AuthManager(service: FirebaseAuthService())
+            userManager = UserManager(services: ProductionUserServices())
+            aiManager = AIManager(service: OpenAIService())
+            todoManager = TodoManager(service: FirebaseTodoService())
+
+        case .prod:
+            authManager = AuthManager(service: FirebaseAuthService())
+            userManager = UserManager(services: ProductionUserServices())
+            aiManager = AIManager(service: OpenAIService())
+            todoManager = TodoManager(service: FirebaseTodoService())
+
+        }
     }
 }
 
