@@ -2,7 +2,7 @@
 //  AppState.swift
 //  IDO
 //
-//  Created by Γιωργος Ζωρακης on 6/3/25.
+//  Created by George Zorakis on 6/3/25.
 //
 
 import SwiftUI

@@ -2,7 +2,7 @@
 //  TodoListView.swift
 //  IDO
 //
-//  Created by Γιωργος Ζωρακης on 12/3/25.
+//  Created by George Zorakis on 12/3/25.
 //
 
 import SwiftUI

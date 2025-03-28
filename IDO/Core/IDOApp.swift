@@ -2,7 +2,7 @@
 //  IDOApp.swift
 //  IDO
 //
-//  Created by Γιωργος Ζωρακης on 3/3/25.
+//  Created by George Zorakis on 3/3/25.
 //
 
 import SwiftUI
@@ -20,6 +20,7 @@ struct IDOApp: App {
                 .environment(delegate.dependencies.userManager)
                 .environment(delegate.dependencies.aiManager)
                 .environment(delegate.dependencies.todoManager)
+                .environment(delegate.dependencies.logManager)
         }
     }
 }
@@ -67,7 +68,7 @@ enum BuildConfiguration {
     
     func configure() {
         switch self {
-        case .mock(let isSignedIn):
+        case .mock:
             // Mock build does not run Firebase
             break
         case .dev:
@@ -90,6 +91,7 @@ struct Dependencies {
     let userManager: UserManager
     let aiManager: AIManager
     let todoManager: TodoManager
+    let logManager: LogManager
     
     init(config: BuildConfiguration) {
         
@@ -103,19 +105,27 @@ struct Dependencies {
             userManager = UserManager(services: MockUserServices(user: isSignedIn ? .mock : nil))
             aiManager = AIManager(service: MockAIService())
             todoManager = TodoManager(service: MockTodoService())
+            logManager = LogManager(services: [
+                ConsoleService()
+            ])
 
         case .dev:
             authManager = AuthManager(service: FirebaseAuthService())
             userManager = UserManager(services: ProductionUserServices())
             aiManager = AIManager(service: OpenAIService())
             todoManager = TodoManager(service: FirebaseTodoService())
+            logManager = LogManager(services: [
+                ConsoleService()
+            ])
+
 
         case .prod:
             authManager = AuthManager(service: FirebaseAuthService())
             userManager = UserManager(services: ProductionUserServices())
             aiManager = AIManager(service: OpenAIService())
             todoManager = TodoManager(service: FirebaseTodoService())
-
+            logManager = LogManager(services: [
+            ])
         }
     }
 }
@@ -129,5 +139,6 @@ extension View {
             .environment(TodoManager(service: MockTodoService()))
             .environment(AppState())
             .environment(AIManager(service: MockAIService()))
+            .environment(LogManager(services: []))
     }
 }

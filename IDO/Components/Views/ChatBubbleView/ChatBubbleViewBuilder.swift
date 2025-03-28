@@ -2,7 +2,7 @@
 //  ChatBubbleViewBuilder.swift
 //  IDO
 //
-//  Created by Γιωργος Ζωρακης on 16/3/25.
+//  Created by George Zorakis on 16/3/25.
 //
 
 import SwiftUI

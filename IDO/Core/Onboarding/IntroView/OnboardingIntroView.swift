@@ -2,7 +2,7 @@
 //  OnboardingIntroView.swift
 //  IDO
 //
-//  Created by Γιωργος Ζωρακης on 7/3/25.
+//  Created by George Zorakis on 7/3/25.
 //
 
 import SwiftUI

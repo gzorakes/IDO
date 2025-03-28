@@ -2,7 +2,7 @@
 //  CategoriesView.swift
 //  IDO
 //
-//  Created by Γιωργος Ζωρακης on 5/3/25.
+//  Created by George Zorakis on 5/3/25.
 //
 
 import SwiftUI
@@ -92,4 +92,5 @@ struct CategoriesView: View {
 
 #Preview {
     CategoriesView()
+        .previewEnvironment()
 }

@@ -2,7 +2,7 @@
 //  ChatModel.swift
 //  IDO
 //
-//  Created by Γιωργος Ζωρακης on 14/3/25.
+//  Created by George Zorakis on 14/3/25.
 //
 
 import Foundation

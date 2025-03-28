@@ -2,7 +2,7 @@
 //  MockUserPersistence.swift
 //  IDO
 //
-//  Created by Γιωργος Ζωρακης on 19/3/25.
+//  Created by George Zorakis on 19/3/25.
 //
 
 import Foundation

@@ -2,7 +2,7 @@
 //  ImageView.swift
 //  IDO
 //
-//  Created by Γιωργος Ζωρακης on 9/3/25.
+//  Created by George Zorakis on 9/3/25.
 //
 
 import SwiftUI

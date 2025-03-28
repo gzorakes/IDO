@@ -2,7 +2,7 @@
 //  FirebaseTodoService.swift
 //  IDO
 //
-//  Created by Γιωργος Ζωρακης on 27/3/25.
+//  Created by George Zorakis on 27/3/25.
 //
 
 import FirebaseFirestore

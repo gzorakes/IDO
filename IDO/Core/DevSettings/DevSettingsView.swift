@@ -2,7 +2,7 @@
 //  DevSettingsView.swift
 //  IDO
 //
-//  Created by Γιωργος Ζωρακης on 28/3/25.
+//  Created by George Zorakis on 28/3/25.
 //
 
 import SwiftUI

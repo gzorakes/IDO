@@ -2,7 +2,7 @@
 //  MockTodoService.swift
 //  IDO
 //
-//  Created by Γιωργος Ζωρακης on 27/3/25.
+//  Created by George Zorakis on 27/3/25.
 //
 
 import SwiftUI
@@ -28,7 +28,7 @@ struct MockTodoService: TodoService {
     }
     
     func getTodosForAuthor(userId: String, category: String) async throws -> [TodoItemModel] {
-        todos
+        todos.filter { $0.categoryId == category }
     }
     
     func updateTodo(todoItem: TodoItemModel) async throws {

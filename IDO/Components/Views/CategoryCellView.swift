@@ -2,7 +2,7 @@
 //  CategoryCellView.swift
 //  IDO
 //
-//  Created by Γιωργος Ζωρακης on 8/3/25.
+//  Created by George Zorakis on 8/3/25.
 //
 
 import SwiftUI

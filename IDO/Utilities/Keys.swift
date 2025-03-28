@@ -2,7 +2,7 @@
 //  Keys.swift
 //  IDO
 //
-//  Created by Γιωργος Ζωρακης on 20/3/25.
+//  Created by George Zorakis on 20/3/25.
 //
 
 struct Keys {

@@ -2,7 +2,7 @@
 //  UserModel.swift
 //  IDO
 //
-//  Created by Γιωργος Ζωρακης on 15/3/25.
+//  Created by George Zorakis on 15/3/25.
 //
 
 import SwiftUI
