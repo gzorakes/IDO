@@ -106,7 +106,7 @@ struct Dependencies {
             aiManager = AIManager(service: MockAIService())
             todoManager = TodoManager(service: MockTodoService())
             logManager = LogManager(services: [
-                ConsoleService()
+                ConsoleService(printParameters: false)
             ])
 
         case .dev:
