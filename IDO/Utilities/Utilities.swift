@@ -6,14 +6,16 @@
 //
 
 import Foundation
+import SwiftfulUtilities
 
-public struct Utilities {
-    
-    public static var appVersion: String? {
-        return Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
-    }
-    
-    public static var buildNumber: String? {
-        return Bundle.main.infoDictionary?["CFBundleVersion"] as? String
-    }
-}
+typealias Utilities = SwiftfulUtilities.Utilities
+//public struct Utilities {
+//    
+//    public static var appVersion: String? {
+//        return Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
+//    }
+//    
+//    public static var buildNumber: String? {
+//        return Bundle.main.infoDictionary?["CFBundleVersion"] as? String
+//    }
+//}

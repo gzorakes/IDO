@@ -11,6 +11,15 @@ struct CategoriesView: View {
     
     @State private var categories: [CategoryModel] = CategoryModel.allCategories
     @State private var path: [CategoryModel] = []
+    @State private var showDevSettings = false
+    
+    private var showDevSettingsButton: Bool {
+    #if DEV || MOCK
+        return true
+    #else
+        return false
+    #endif
+    }
     
     var body: some View {
         NavigationStack(path: $path) {
@@ -25,8 +34,35 @@ struct CategoriesView: View {
                 .navigationDestination(for: CategoryModel.self) { newValue in
                     TodoListView(category: newValue)
                 }
+                .toolbar {
+                    ToolbarItem(placement: .topBarLeading) {
+                        if showDevSettingsButton {
+                            devSettingsButton
+                        }
+                    }
+                }
+                .sheet(isPresented: $showDevSettings) {
+                    DevSettingsView()
+                }
 //            }
         }
+    }
+    
+    private var devSettingsButton: some View {
+        Text("DEV ⚙️")
+            .font(.footnote).bold()
+            .foregroundStyle(.white)
+            .padding(6)
+            .background(.accent)
+            .cornerRadius(8)
+            .anyButton(.press) {
+                onDevSettingsPressed()
+            }
+    }
+    
+    private func onDevSettingsPressed() {
+        showDevSettings = true
+
     }
     
     private var categoriesGrid: some View {

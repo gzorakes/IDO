@@ -21,6 +21,7 @@ struct TodoListView: View {
     @State private var selectedImage: ImageWrapper?
     @State private var editingItem: TodoItemModel?
     
+    
     var body: some View {
         List {
             todoItemsList
@@ -91,6 +92,7 @@ struct TodoListView: View {
     private var toolBarButtons: some ToolbarContent {
         ToolbarItem(placement: .topBarTrailing) {
             HStack(spacing: 16) {
+                
                 Image(systemName: "square.and.pencil")
                     .foregroundStyle(.accent)
                     .anyButton {
