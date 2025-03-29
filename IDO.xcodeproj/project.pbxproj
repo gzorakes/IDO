@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		1044E7632D89EEF30013ED25 /* SwiftfulFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 1044E7622D89EEF30013ED25 /* SwiftfulFirestore */; };
 		105F658E2D8C41C9001F8C78 /* OpenAI in Frameworks */ = {isa = PBXBuildFile; productRef = 105F658D2D8C41C9001F8C78 /* OpenAI */; };
+		1060B29B2D98509500E4CEA5 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 1060B29A2D98509500E4CEA5 /* FirebaseAnalytics */; };
 		106AB56D2D8963B400C0DC25 /* SignInAppleAsync in Frameworks */ = {isa = PBXBuildFile; productRef = 106AB56C2D8963B400C0DC25 /* SignInAppleAsync */; };
 		106AB5832D89B9C500C0DC25 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 106AB5822D89B9C500C0DC25 /* FirebaseFirestore */; };
 		10760F6D2D9716CA00DAB735 /* SwiftfulUtilities in Frameworks */ = {isa = PBXBuildFile; productRef = 10760F6C2D9716CA00DAB735 /* SwiftfulUtilities */; };
@@ -77,6 +78,7 @@
 			files = (
 				10DC4E0F2D7A44BD0040CA13 /* SDWebImageSwiftUI in Frameworks */,
 				10760F6D2D9716CA00DAB735 /* SwiftfulUtilities in Frameworks */,
+				1060B29B2D98509500E4CEA5 /* FirebaseAnalytics in Frameworks */,
 				106AB5832D89B9C500C0DC25 /* FirebaseFirestore in Frameworks */,
 				108B353E2D88C2290008D71C /* FirebaseAuth in Frameworks */,
 				106AB56D2D8963B400C0DC25 /* SignInAppleAsync in Frameworks */,
@@ -157,6 +159,7 @@
 				1044E7622D89EEF30013ED25 /* SwiftfulFirestore */,
 				105F658D2D8C41C9001F8C78 /* OpenAI */,
 				10760F6C2D9716CA00DAB735 /* SwiftfulUtilities */,
+				1060B29A2D98509500E4CEA5 /* FirebaseAnalytics */,
 			);
 			productName = IDO;
 			productReference = 108AC4BB2D75A171006B6096 /* IDO.app */;
@@ -831,6 +834,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 105F658C2D8C41C9001F8C78 /* XCRemoteSwiftPackageReference "OpenAI" */;
 			productName = OpenAI;
+		};
+		1060B29A2D98509500E4CEA5 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 108B353C2D88C2290008D71C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
 		};
 		106AB56C2D8963B400C0DC25 /* SignInAppleAsync */ = {
 			isa = XCSwiftPackageProductDependency;
