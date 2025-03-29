@@ -115,7 +115,7 @@ struct Dependencies {
             aiManager = AIManager(service: OpenAIService())
             todoManager = TodoManager(service: FirebaseTodoService())
             logManager = LogManager(services: [
-                ConsoleService(), FirebaseAnalyticsService()
+                ConsoleService(), FirebaseAnalyticsService(), MixPanelService(token: Keys.mixPanelToken)
             ])
 
 
@@ -125,7 +125,7 @@ struct Dependencies {
             aiManager = AIManager(service: OpenAIService())
             todoManager = TodoManager(service: FirebaseTodoService())
             logManager = LogManager(services: [
-                FirebaseAnalyticsService()
+                FirebaseAnalyticsService(), MixPanelService(token: Keys.mixPanelToken)
             ])
         }
     }
