@@ -74,8 +74,6 @@ struct AppView: View {
                 return .analytic
             }
         }
-        
-        
     }
     
     private func checkUserStatus() async {
