@@ -53,10 +53,12 @@ struct AddNoteView: View {
                 isTextFieldFocused = false
             }
         }
+        .screenAppearAnalytics(name: "AddNoteView")
     }
 }
 
 
 #Preview {
     AddNoteView(onSave: {_ in })
+        .previewEnvironment()
 }

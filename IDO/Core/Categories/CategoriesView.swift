@@ -9,6 +9,8 @@ import SwiftUI
 
 struct CategoriesView: View {
     
+    @Environment(LogManager.self) private var logManager
+    
     @State private var categories: [CategoryModel] = CategoryModel.allCategories
     @State private var path: [CategoryModel] = []
     @State private var showDevSettings = false
@@ -23,8 +25,6 @@ struct CategoriesView: View {
     
     var body: some View {
         NavigationStack(path: $path) {
-//            ZStack {
-//                linearBackground()
                 VStack {
                     categoriesGrid
                         .removeListRowFormatting()
@@ -44,7 +44,31 @@ struct CategoriesView: View {
                 .sheet(isPresented: $showDevSettings) {
                     DevSettingsView()
                 }
-//            }
+                .screenAppearAnalytics(name: "CategoriesView")
+        }
+    }
+    
+    enum Event: LoggableEvent {
+        case categoryPressed(category: CategoryModel)
+        
+        var eventName: String {
+            switch self {
+            case .categoryPressed:     return "Categories_Category_Pressed"
+            }
+        }
+        
+        var parameters: [String : Any]? {
+            switch self {
+            case .categoryPressed(category: let category):
+                return category.eventParameters
+            }
+        }
+        
+        var type: LogType {
+            switch self {
+            default:
+                return .analytic
+            }
         }
     }
     
@@ -87,6 +111,7 @@ struct CategoriesView: View {
     
     private func onCategoryPressed(category: CategoryModel) {
         path.append(category)
+        logManager.trackEvent(event: Event.categoryPressed(category: category))
     }
 }
 

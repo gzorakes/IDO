@@ -46,5 +46,13 @@ enum CategoryModel: String, CaseIterable, Identifiable {
         }
     }
     
+    var eventParameters: [String: Any] {
+        return [
+            "category_id": id,
+            "category_title": title
+        ]
+    }
+    
+    
     static let allCategories: [CategoryModel] = CategoryModel.allCases
 }

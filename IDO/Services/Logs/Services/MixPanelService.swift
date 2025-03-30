@@ -50,6 +50,8 @@ struct MixPanelService: LogService {
     }
     
     func trackEvent(event: any LoggableEvent) {
+        guard event.type != .info else { return }
+
         var eventProperties: [String: MixpanelType] = [:]
         
         if let parameters = event.parameters {
@@ -67,8 +69,4 @@ struct MixPanelService: LogService {
     func trackScreenEvent(event: any LoggableEvent) {
         trackEvent(event: event)
     }
-    
-    
-    
-    
 }
