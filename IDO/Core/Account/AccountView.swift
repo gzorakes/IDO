@@ -9,10 +9,12 @@ import SwiftUI
 
 struct AccountView: View {
     
+    @Environment(\.dismiss) private var dismiss
     @Environment(AppState.self) private var appState
     @Environment(AuthManager.self) private var authManager
     @Environment(UserManager.self) private var userManager
-    @Environment(\.dismiss) private var dismiss
+    @Environment(LogManager.self) private var logManager
+
     @State private var currentUser: UserModel?
     @State private var isAnonymousUser: Bool = false
     @State private var showCreateAccountView: Bool = false
@@ -45,6 +47,7 @@ struct AccountView: View {
                 self.currentUser = userManager.currentUser
             }
             .showCustomAlert(alert: $showAlert)
+            .screenAppearAnalytics(name: "AccountView")
         }
     }
     
@@ -85,6 +88,51 @@ struct AccountView: View {
         .removeListRowFormatting()
     }
     
+    
+    enum Event: LoggableEvent {
+        case createAccountPressed
+        case signOutPressed
+        case signOutFailed(error: Error)
+        case deleteAccountPressed
+        case deleteAccountConfirmed
+        case deleteAccountFailed(error: Error)
+        case contactUsPressed
+        
+        var eventName: String {
+            switch self {
+            case .createAccountPressed:    return "Account_CreateAccountPressed"
+            case .signOutPressed:         return "Account_SignOutPressed"
+            case .signOutFailed:          return "Account_SignOutFailed"
+            case .deleteAccountPressed:   return "Account_DeletePressed"
+            case .deleteAccountConfirmed: return "Account_DeleteConfirmed"
+            case .deleteAccountFailed:    return "Account_DeleteFailed"
+            case .contactUsPressed:       return "Account_ContactUsPressed"
+            }
+        }
+        
+        var parameters: [String : Any]? {
+            switch self {
+            case .signOutFailed(let error),
+                    .deleteAccountFailed(let error):
+                return error.eventParameters
+            default:
+                return nil
+            }
+        }
+        
+        var type: LogType {
+            switch self {
+            case .signOutFailed,
+                    .deleteAccountFailed:
+                return .severe
+            default:
+                return .analytic
+            }
+        }
+    }
+    
+    
+    
     private var saveSection: some View {
         if isAnonymousUser {
             Button {
@@ -118,7 +166,7 @@ struct AccountView: View {
             LabeledContent("Version", value: Utilities.appVersion ?? "")
             LabeledContent("Build Number", value: Utilities.buildNumber ?? "")
             Button {
-                
+                logManager.trackEvent(event: Event.contactUsPressed)
             } label: {
                 Text("Contact us")
             }
@@ -142,12 +190,14 @@ struct AccountView: View {
     }
     
     func onSignOutPressed() {
+        logManager.trackEvent(event: Event.signOutPressed)
         Task {
             do {
                 try authManager.signOut()
                 userManager.signOut()
                 await dismissScreen()
             } catch {
+                logManager.trackEvent(event: Event.signOutFailed(error: error))
                 showAlert = AnyAppAlert(error: error)
             }
         }
@@ -160,12 +210,14 @@ struct AccountView: View {
     }
     
     func onDeleteAccountPressed() {
+        logManager.trackEvent(event: Event.deleteAccountPressed)
         showAlert = AnyAppAlert(
             title: "Delete account?",
             subtitle: "This action is permanent and cannot be undone. Your data will be deleted from our server forever.",
             buttons: {
                 AnyView(
                     Button("Delete", role: .destructive, action: {
+                        logManager.trackEvent(event: Event.deleteAccountConfirmed)
                         onDeleteAccountConfirmed()
                     })
                 )
@@ -178,14 +230,17 @@ struct AccountView: View {
             do {
                 try await authManager.deleteAccount()
                 try await userManager.deleteCurrentUser()
+                logManager.deleteUserProfile()
                 await dismissScreen()
             } catch {
+                logManager.trackEvent(event: Event.deleteAccountFailed(error: error))
                 showAlert = AnyAppAlert(error: error)
             }
         }
     }
     
     func onCreateAccountPressed() {
+        logManager.trackEvent(event: Event.createAccountPressed)
         showCreateAccountView = true
     }
     
@@ -198,19 +253,19 @@ struct AccountView: View {
     AccountView()
         .environment(AuthManager(service: MockAuthService(user: nil)))
         .environment(UserManager(services: MockUserServices(user: nil)))
-        .environment(AppState())
+        .previewEnvironment()
 }
 
 #Preview("Anonymous") {
     AccountView()
         .environment(AuthManager(service: MockAuthService(user: UserAuthInfo.mock(isAnonymous: true))))
         .environment(UserManager(services: MockUserServices(user: .mock)))
-        .environment(AppState())
+        .previewEnvironment()
 }
 
 #Preview("Not anonymous") {
     AccountView()
         .environment(AuthManager(service: MockAuthService(user: UserAuthInfo.mock(isAnonymous: false))))
         .environment(UserManager(services: MockUserServices(user: .mock)))
-        .environment(AppState())
+        .previewEnvironment()
 }

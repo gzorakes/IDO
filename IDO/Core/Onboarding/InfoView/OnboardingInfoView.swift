@@ -78,6 +78,7 @@ struct OnboardingInfoView: View {
             }
             .padding(24)
         })
+        .screenAppearAnalytics(name: "OnboardingInfoView")
     }
     
     private func rectangle(color: Color, name: String, isSelected: Bool) -> some View {
