@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftfulUtilities
 
 struct AppView: View {
     
@@ -28,6 +29,10 @@ struct AppView: View {
         .task {
             await checkUserStatus()
         }
+        .task {
+            try? await Task.sleep(for: .seconds(2))
+            await showATTPromptIfNeeded()
+        }
         .onChange(of: appState.showTabBar) { _, showTabBar in
             if !showTabBar {
                 Task {
@@ -44,7 +49,7 @@ struct AppView: View {
         case anonAuthStart
         case anonAuthSuccess
         case anonAuthFail(error: Error)
-
+        case attStatus(dict: [String: Any])
         
         var eventName: String {
             switch self {
@@ -53,6 +58,7 @@ struct AppView: View {
             case .anonAuthStart:         return "AppView_AnonAuth_Start"
             case .anonAuthSuccess:       return "AppView_AnonAuth_Success"
             case .anonAuthFail:          return "AppView_AnonAuth_Fail"
+            case .attStatus:             return "AppView_ATTStatus"
             }
         }
         
@@ -60,6 +66,8 @@ struct AppView: View {
             switch self {
             case .existingAuthFail(error: let error), .anonAuthFail(error: let error):
                 return error.eventParameters
+            case .attStatus(dict: let dict):
+                return dict
             default:
                 return nil
             }
@@ -73,6 +81,13 @@ struct AppView: View {
                 return .analytic
             }
         }
+    }
+    
+    private func showATTPromptIfNeeded() async {
+        #if !DEBUG
+        let status = await AppTrackingTransparencyHelper.requestTrackingAuthorization()
+        logManager.trackEvent(event: Event.attStatus(dict: status.eventParameters))
+        #endif
     }
     
     private func checkUserStatus() async {
