@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct OnboardingInfoView: View {
+    
+    @Environment(LogManager.self) private var logManager
 
     @State private var selectedColor: Color?
     @State private var name: String = ""
@@ -29,11 +31,13 @@ struct OnboardingInfoView: View {
                     rectangle(color: .customPink, name: "Bride", isSelected: selectedColor == .customPink)
                         .onTapGesture {
                             selectedColor = .customPink
+                            logManager.trackEvent(event: Event.roleSelected(role: "Bride"))
                         }
                     
                     rectangle(color: .accent, name: "Groom", isSelected: selectedColor == .accent)
                         .onTapGesture {
                             selectedColor = .accent
+                            logManager.trackEvent(event: Event.roleSelected(role: "Groom"))
                         }
                     Spacer()
                 }
@@ -102,6 +106,27 @@ struct OnboardingInfoView: View {
         } label: {
             Text("Continue")
                 .callToActionButton()
+        }
+    }
+    
+    enum Event: LoggableEvent {
+        case roleSelected(role: String)
+        
+        var eventName: String {
+            switch self {
+            case .roleSelected: return "Onboarding_Role_Selected"
+            }
+        }
+        
+        var parameters: [String: Any]? {
+            switch self {
+            case .roleSelected(let role):
+                return ["role": role]
+            }
+        }
+        
+        var type: LogType {
+            return .analytic
         }
     }
 }
