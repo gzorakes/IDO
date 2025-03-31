@@ -21,6 +21,7 @@ struct IDOApp: App {
                 .environment(delegate.dependencies.aiManager)
                 .environment(delegate.dependencies.todoManager)
                 .environment(delegate.dependencies.logManager)
+                .environment(delegate.dependencies.pushManager)
         }
     }
 }
@@ -92,6 +93,7 @@ struct Dependencies {
     let aiManager: AIManager
     let todoManager: TodoManager
     let logManager: LogManager
+    let pushManager: PushManager
     
     init(config: BuildConfiguration) {
         
@@ -127,6 +129,8 @@ struct Dependencies {
             aiManager = AIManager(service: OpenAIService())
             todoManager = TodoManager(service: FirebaseTodoService())
         }
+        
+        pushManager = PushManager(logManager: logManager)
     }
 }
 
@@ -140,5 +144,6 @@ extension View {
             .environment(AppState())
             .environment(AIManager(service: MockAIService()))
             .environment(LogManager(services: []))
+            .environment(PushManager())
     }
 }
