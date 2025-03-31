@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftfulUtilities
 
 struct AccountView: View {
     
@@ -19,7 +20,7 @@ struct AccountView: View {
     @State private var isAnonymousUser: Bool = false
     @State private var showCreateAccountView: Bool = false
     @State private var showAlert: AnyAppAlert?
-
+    @State private var showRatingsModal: Bool = false
     
     var body: some View {
         NavigationStack {
@@ -48,7 +49,25 @@ struct AccountView: View {
             }
             .showCustomAlert(alert: $showAlert)
             .screenAppearAnalytics(name: "AccountView")
+            .showModal(showModal: $showRatingsModal) {
+                ratingsModal
+            }
         }
+    }
+    
+    private var ratingsModal: some View {
+        CustomModalView(
+            title: "Are you enjoying IDO App?",
+            subtitle: "We'd love to hear your feedback!",
+            primaryButtonTitle: "Yes",
+            primaryButtonAction: {
+                onEnjoyingAppYesPressed()
+            },
+            secondaryButtonTitle: "No",
+            secondaryButtonAction: {
+                onEnjoyingAppNoPressed()
+            }
+        )
     }
     
     private var nameSection: some View {
@@ -87,51 +106,7 @@ struct AccountView: View {
         .frame(maxWidth: .infinity)
         .removeListRowFormatting()
     }
-    
-    
-    enum Event: LoggableEvent {
-        case createAccountPressed
-        case signOutPressed
-        case signOutFailed(error: Error)
-        case deleteAccountPressed
-        case deleteAccountConfirmed
-        case deleteAccountFailed(error: Error)
-        case contactUsPressed
         
-        var eventName: String {
-            switch self {
-            case .createAccountPressed:    return "Account_CreateAccountPressed"
-            case .signOutPressed:         return "Account_SignOutPressed"
-            case .signOutFailed:          return "Account_SignOutFailed"
-            case .deleteAccountPressed:   return "Account_DeletePressed"
-            case .deleteAccountConfirmed: return "Account_DeleteConfirmed"
-            case .deleteAccountFailed:    return "Account_DeleteFailed"
-            case .contactUsPressed:       return "Account_ContactUsPressed"
-            }
-        }
-        
-        var parameters: [String : Any]? {
-            switch self {
-            case .signOutFailed(let error),
-                    .deleteAccountFailed(let error):
-                return error.eventParameters
-            default:
-                return nil
-            }
-        }
-        
-        var type: LogType {
-            switch self {
-            case .signOutFailed,
-                    .deleteAccountFailed:
-                return .severe
-            default:
-                return .analytic
-            }
-        }
-    }
-    
-    
     
     private var saveSection: some View {
         if isAnonymousUser {
@@ -163,14 +138,20 @@ struct AccountView: View {
     
     private var appInfoSection: some View {
         Section {
+            Button {
+                onRatingsButtonPressed()
+            } label: {
+                Text("Rate us on the App Store")
+            }
+//            .foregroundStyle(.primary)
             LabeledContent("Version", value: Utilities.appVersion ?? "")
             LabeledContent("Build Number", value: Utilities.buildNumber ?? "")
             Button {
-                logManager.trackEvent(event: Event.contactUsPressed)
+                onContactUsPressed()
             } label: {
                 Text("Contact us")
             }
-            .foregroundStyle(.primary)
+//            .foregroundStyle(.primary)
         } header: {
             Text("Application")
         } footer: {
@@ -225,6 +206,35 @@ struct AccountView: View {
         )
     }
     
+    private func onRatingsButtonPressed() {
+        logManager.trackEvent(event: Event.ratingsPressed)
+        showRatingsModal = true
+    }
+    
+    private func onEnjoyingAppYesPressed() {
+        logManager.trackEvent(event: Event.ratingsYesPressed)
+        showRatingsModal = false
+        AppStoreRatingsHelper.requestRatingsReview()
+    }
+    
+    private func onEnjoyingAppNoPressed() {
+        logManager.trackEvent(event: Event.ratingsNoPressed)
+        showRatingsModal = false
+    }
+    
+    private func onContactUsPressed() {
+        logManager.trackEvent(event: Event.contactUsPressed)
+
+        let email = "zorakisgeorge@gmail.com"
+        let emailString = "mailto:\(email)"
+        
+        guard let url = URL(string: emailString), UIApplication.shared.canOpenURL(url) else {
+            return
+        }
+        
+        UIApplication.shared.open(url)
+    }
+    
     private func onDeleteAccountConfirmed() {
         Task {
             do {
@@ -246,6 +256,54 @@ struct AccountView: View {
     
     func setAnonymousAccountStatus() {
         isAnonymousUser = authManager.auth?.isAnonymous == true
+    }
+    
+    enum Event: LoggableEvent {
+        case createAccountPressed
+        case signOutPressed
+        case signOutFailed(error: Error)
+        case deleteAccountPressed
+        case deleteAccountConfirmed
+        case deleteAccountFailed(error: Error)
+        case contactUsPressed
+        case ratingsPressed
+        case ratingsYesPressed
+        case ratingsNoPressed
+        
+        var eventName: String {
+            switch self {
+            case .createAccountPressed:   return "Account_CreateAccountPressed"
+            case .signOutPressed:         return "Account_SignOutPressed"
+            case .signOutFailed:          return "Account_SignOutFailed"
+            case .deleteAccountPressed:   return "Account_DeletePressed"
+            case .deleteAccountConfirmed: return "Account_DeleteConfirmed"
+            case .deleteAccountFailed:    return "Account_DeleteFailed"
+            case .contactUsPressed:       return "Account_ContactUsPressed"
+            case .ratingsPressed:         return "Account_RatingsPressed"
+            case .ratingsYesPressed:      return "Account_RatingsYesPressed"
+            case .ratingsNoPressed:       return "Account_RatingsNoPressed"
+            }
+        }
+        
+        var parameters: [String : Any]? {
+            switch self {
+            case .signOutFailed(let error),
+                    .deleteAccountFailed(let error):
+                return error.eventParameters
+            default:
+                return nil
+            }
+        }
+        
+        var type: LogType {
+            switch self {
+            case .signOutFailed,
+                    .deleteAccountFailed:
+                return .severe
+            default:
+                return .analytic
+            }
+        }
     }
 }
 
