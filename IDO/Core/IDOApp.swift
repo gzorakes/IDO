@@ -101,32 +101,31 @@ struct Dependencies {
 
         switch config {
         case .mock(isSignedIn: let isSignedIn):
-            authManager = AuthManager(service: MockAuthService(user: isSignedIn ? .mock() : nil))
-            userManager = UserManager(services: MockUserServices(user: isSignedIn ? .mock : nil))
-            aiManager = AIManager(service: MockAIService())
-            todoManager = TodoManager(service: MockTodoService())
             logManager = LogManager(services: [
                 ConsoleService(printParameters: false)
             ])
+            authManager = AuthManager(service: MockAuthService(user: isSignedIn ? .mock() : nil), logManager: logManager)
+            userManager = UserManager(services: MockUserServices(user: isSignedIn ? .mock : nil), logManager: logManager)
+            aiManager = AIManager(service: MockAIService())
+            todoManager = TodoManager(service: MockTodoService())
 
         case .dev:
-            authManager = AuthManager(service: FirebaseAuthService())
-            userManager = UserManager(services: ProductionUserServices())
-            aiManager = AIManager(service: OpenAIService())
-            todoManager = TodoManager(service: FirebaseTodoService())
             logManager = LogManager(services: [
-                ConsoleService(), FirebaseAnalyticsService(), MixPanelService(token: Keys.mixPanelToken)
+                ConsoleService(printParameters: false), FirebaseAnalyticsService(), MixPanelService(token: Keys.mixPanelToken, loggingEnabled: false)
             ])
-
-
-        case .prod:
-            authManager = AuthManager(service: FirebaseAuthService())
-            userManager = UserManager(services: ProductionUserServices())
+            authManager = AuthManager(service: FirebaseAuthService(), logManager: logManager)
+            userManager = UserManager(services: ProductionUserServices(), logManager: logManager)
             aiManager = AIManager(service: OpenAIService())
             todoManager = TodoManager(service: FirebaseTodoService())
+            
+        case .prod:
             logManager = LogManager(services: [
                 FirebaseAnalyticsService(), MixPanelService(token: Keys.mixPanelToken)
             ])
+            authManager = AuthManager(service: FirebaseAuthService(), logManager: logManager)
+            userManager = UserManager(services: ProductionUserServices(), logManager: logManager)
+            aiManager = AIManager(service: OpenAIService())
+            todoManager = TodoManager(service: FirebaseTodoService())
         }
     }
 }
