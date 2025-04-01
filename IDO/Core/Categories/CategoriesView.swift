@@ -146,7 +146,8 @@ struct CategoriesView: View {
                             .anyButton(.press) {
                                 onCategoryPressed(category: category)
                             }
-                            .frame(width: 160, height: 90)
+                            .frame(width: UIScreen.main.bounds.width / 2 - 32)
+                            .frame(height: UIScreen.main.bounds.height / 10 )
                             .shadow(radius: 5)
                     }
                 }

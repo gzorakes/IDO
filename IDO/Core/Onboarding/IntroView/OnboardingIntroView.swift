@@ -19,19 +19,13 @@ struct OnboardingIntroView: View {
                 +
                 Text("simplified!\nOrganize every detail in one place.\n\n")
                 +
-                Text("Get ideas generated from ")
+                Text("Keep track with ")
                 +
-                Text("AI ")
+                Text("categories\n")
                     .foregroundStyle(.accent)
                     .fontWeight(.semibold)
                 +
-                Text("and have ")
-                +
-                Text("real conversations")
-                    .foregroundStyle(.accent)
-                    .fontWeight(.semibold)
-                +
-                Text("!")
+                Text("for all your wedding details!")
             }
             .baselineOffset(6)
             .frame(maxHeight: .infinity)
@@ -54,4 +48,5 @@ struct OnboardingIntroView: View {
 
 #Preview {
     OnboardingIntroView()
+        .previewEnvironment()
 }

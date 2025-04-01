@@ -147,7 +147,7 @@ class UserManager  {
         
         var type: LogType {
             switch self {
-            case . remoteListenerFail(error: let error), .saveLocalFail(error: let error):
+            case . remoteListenerFail, .saveLocalFail:
                 return .severe
             default:
                 return .analytic

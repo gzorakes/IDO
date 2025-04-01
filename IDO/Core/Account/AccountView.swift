@@ -238,8 +238,8 @@ struct AccountView: View {
     private func onDeleteAccountConfirmed() {
         Task {
             do {
-                try await authManager.deleteAccount()
                 try await userManager.deleteCurrentUser()
+                try await authManager.deleteAccount()
                 logManager.deleteUserProfile()
                 await dismissScreen()
             } catch {
