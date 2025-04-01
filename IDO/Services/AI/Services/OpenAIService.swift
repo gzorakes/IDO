@@ -5,32 +5,22 @@
 //  Created by George Zorakis on 20/3/25.
 //
 
-import OpenAI
 import SwiftUI
+import FirebaseFunctions
 
 struct OpenAIService: AIService {
     
-    var openAI: OpenAI {
-        OpenAI(apiToken: Keys.openAI)
-    }
-    
     func generateImage(input: String) async throws -> UIImage {
-        let query = ImagesQuery(
-            prompt: input,
-            model: .dall_e_2,
-            n: 1,
-            quality: .hd,
-            responseFormat: .b64_json,
-            size: ._512,
-            style: .natural,
-            user: nil
-        )
         
-        let result = try await openAI.images(query: query)
+        let response = try await Functions.functions().httpsCallable("generateOpenAIImage").call([
+            "input": input
+        ])
         
-        guard let b64Json = result.data.first?.b64Json,
-              let data = Data(base64Encoded: b64Json),
-              let image = UIImage(data: data) else {
+        
+        guard
+            let b64Json = response.data as? String,
+            let data = Data(base64Encoded: b64Json),
+            let image = UIImage(data: data) else {
             throw OpenAIError.invalidResponse
         }
         

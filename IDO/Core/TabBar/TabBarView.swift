@@ -16,10 +16,10 @@ struct TabBarView: View {
                     Label("Notes", systemImage: "list.clipboard")
                 }
                 
-//            ImageGeneratorView()
-//                .tabItem {
-//                    Label("AI Generator", systemImage: "sparkles")
-//                }
+            ImageGeneratorView()
+                .tabItem {
+                    Label("AI Generator", systemImage: "sparkles")
+                }
             AccountView()
                 .tabItem {
                     Label("Account", systemImage: "person")
