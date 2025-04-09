@@ -55,7 +55,9 @@ class AuthManager  {
     
     
     func signInAnonymously() async throws -> (user: UserAuthInfo, isNewUser: Bool) {
-        try await service.signInAnonymously()
+        let result = try await service.signInAnonymously()
+        self.auth = result.user
+        return result
     }
     
     func signInApple() async throws -> (user: UserAuthInfo, isNewUser: Bool) {
@@ -63,7 +65,9 @@ class AuthManager  {
             addAuthListener()
         }
         
-        return try await service.signInApple()
+        let result = try await service.signInApple()
+        self.auth = result.user
+        return result
     }
     
     func signOut() throws {

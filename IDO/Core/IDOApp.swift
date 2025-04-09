@@ -7,9 +7,37 @@
 
 import SwiftUI
 import Firebase
+import SwiftfulUtilities
 
 
+
+/*
+ While testing, we dont need to run all
+ our dependencies, analytics etc. This way
+ we bypass SwiftUI app launch during unit
+ testing
+ */
 @main
+struct AppEntryPoint {
+    
+    static func main() {
+        if Utilities.isUnitTesting {
+            TestingApp.main()
+        } else {
+            IDOApp.main()
+        }
+    }
+}
+
+struct TestingApp: App {
+    var body: some Scene {
+        WindowGroup {
+            Text("Testing")
+        }
+    }
+}
+
+
 struct IDOApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
 

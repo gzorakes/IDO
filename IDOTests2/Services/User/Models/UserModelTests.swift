@@ -25,6 +25,7 @@ struct UserModelTests {
         let didCompleteOnboarding = Bool.random
         let profileColorHex = "#FF8DA1"
 
+        try await Task.sleep(for: .seconds(10))
         let user = UserModel(
             userId: userId,
             email: email,
