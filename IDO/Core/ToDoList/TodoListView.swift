@@ -311,7 +311,3 @@ struct TodoListView: View {
             .previewEnvironment()
     }
 }
-
-
-
-
