@@ -1,14 +1,13 @@
 //
-//  IDOTests.swift
-//  IDOTests
+//  IDOTests2.swift
+//  IDOTests2
 //
-//  Created by George Zorakis on 3/3/25.
+//  Created by George Zorakis on 9/4/25.
 //
 
 import Testing
-@testable import IDO
 
-struct IDOTests {
+struct IDOTests2 {
 
     @Test func example() async throws {
         // Write your test here and use APIs like `#expect(...)` to check expected conditions.

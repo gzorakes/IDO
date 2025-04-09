@@ -29,6 +29,41 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES"
       shouldAutocreateTestPlan = "YES">
+      <Testables>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "74A1839E2DA66F0F00E59086"
+               BuildableName = "IDOTests2.xctest"
+               BlueprintName = "IDOTests2"
+               ReferencedContainer = "container:IDO.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "108AC4D42D75A171006B6096"
+               BuildableName = "IDOUITests.xctest"
+               BlueprintName = "IDOUITests"
+               ReferencedContainer = "container:IDO.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "108AC4CA2D75A171006B6096"
+               BuildableName = "IDOTests.xctest"
+               BlueprintName = "IDOTests"
+               ReferencedContainer = "container:IDO.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+      </Testables>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Mock"
