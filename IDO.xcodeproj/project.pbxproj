@@ -19,6 +19,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		74368F5B2DA9817900FCF919 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 108AC4B32D75A171006B6096 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 108AC4BA2D75A171006B6096;
+			remoteInfo = IDO;
+		};
 		74A183A32DA66F0F00E59086 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 108AC4B32D75A171006B6096 /* Project object */;
@@ -30,6 +37,7 @@
 
 /* Begin PBXFileReference section */
 		108AC4BB2D75A171006B6096 /* IDO.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IDO.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		74368F552DA9817900FCF919 /* IDOUITests2.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = IDOUITests2.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		74A1839F2DA66F0F00E59086 /* IDOTests2.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = IDOTests2.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -50,6 +58,11 @@
 				10EDA5652D89FCA70025EF8F /* Exceptions for "IDO" folder in "IDO" target */,
 			);
 			path = IDO;
+			sourceTree = "<group>";
+		};
+		74368F562DA9817900FCF919 /* IDOUITests2 */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = IDOUITests2;
 			sourceTree = "<group>";
 		};
 		74A183A02DA66F0F00E59086 /* IDOTests2 */ = {
@@ -76,6 +89,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		74368F522DA9817900FCF919 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		74A1839C2DA66F0F00E59086 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -98,6 +118,7 @@
 			children = (
 				108AC4BD2D75A171006B6096 /* IDO */,
 				74A183A02DA66F0F00E59086 /* IDOTests2 */,
+				74368F562DA9817900FCF919 /* IDOUITests2 */,
 				106AB5812D89B9C500C0DC25 /* Frameworks */,
 				108AC4BC2D75A171006B6096 /* Products */,
 			);
@@ -108,6 +129,7 @@
 			children = (
 				108AC4BB2D75A171006B6096 /* IDO.app */,
 				74A1839F2DA66F0F00E59086 /* IDOTests2.xctest */,
+				74368F552DA9817900FCF919 /* IDOUITests2.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -146,6 +168,29 @@
 			productReference = 108AC4BB2D75A171006B6096 /* IDO.app */;
 			productType = "com.apple.product-type.application";
 		};
+		74368F542DA9817900FCF919 /* IDOUITests2 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 74368F602DA9817900FCF919 /* Build configuration list for PBXNativeTarget "IDOUITests2" */;
+			buildPhases = (
+				74368F512DA9817900FCF919 /* Sources */,
+				74368F522DA9817900FCF919 /* Frameworks */,
+				74368F532DA9817900FCF919 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				74368F5C2DA9817900FCF919 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				74368F562DA9817900FCF919 /* IDOUITests2 */,
+			);
+			name = IDOUITests2;
+			packageProductDependencies = (
+			);
+			productName = IDOUITests2;
+			productReference = 74368F552DA9817900FCF919 /* IDOUITests2.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		74A1839E2DA66F0F00E59086 /* IDOTests2 */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 74A183A52DA66F0F00E59086 /* Build configuration list for PBXNativeTarget "IDOTests2" */;
@@ -182,6 +227,10 @@
 					108AC4BA2D75A171006B6096 = {
 						CreatedOnToolsVersion = 16.2;
 					};
+					74368F542DA9817900FCF919 = {
+						CreatedOnToolsVersion = 16.3;
+						TestTargetID = 108AC4BA2D75A171006B6096;
+					};
 					74A1839E2DA66F0F00E59086 = {
 						CreatedOnToolsVersion = 16.3;
 						TestTargetID = 108AC4BA2D75A171006B6096;
@@ -212,12 +261,20 @@
 			targets = (
 				108AC4BA2D75A171006B6096 /* IDO */,
 				74A1839E2DA66F0F00E59086 /* IDOTests2 */,
+				74368F542DA9817900FCF919 /* IDOUITests2 */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		108AC4B92D75A171006B6096 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		74368F532DA9817900FCF919 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -241,6 +298,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		74368F512DA9817900FCF919 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		74A1839B2DA66F0F00E59086 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -251,6 +315,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		74368F5C2DA9817900FCF919 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 108AC4BA2D75A171006B6096 /* IDO */;
+			targetProxy = 74368F5B2DA9817900FCF919 /* PBXContainerItemProxy */;
+		};
 		74A183A42DA66F0F00E59086 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 108AC4BA2D75A171006B6096 /* IDO */;
@@ -560,6 +629,72 @@
 			};
 			name = Release;
 		};
+		74368F5D2DA9817900FCF919 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3KD3485D64;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.zorakisgeorge.IDOUITests2;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = IDO;
+			};
+			name = Debug;
+		};
+		74368F5E2DA9817900FCF919 /* Mock */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3KD3485D64;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.zorakisgeorge.IDOUITests2;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = IDO;
+			};
+			name = Mock;
+		};
+		74368F5F2DA9817900FCF919 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3KD3485D64;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.zorakisgeorge.IDOUITests2;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = IDO;
+			};
+			name = Release;
+		};
 		74A183A62DA66F0F00E59086 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -645,6 +780,16 @@
 				108AC4E02D75A171006B6096 /* Debug */,
 				10760F622D96D40B00DAB735 /* Mock */,
 				108AC4E12D75A171006B6096 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		74368F602DA9817900FCF919 /* Build configuration list for PBXNativeTarget "IDOUITests2" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				74368F5D2DA9817900FCF919 /* Debug */,
+				74368F5E2DA9817900FCF919 /* Mock */,
+				74368F5F2DA9817900FCF919 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

@@ -84,3 +84,5 @@ swiftlint_report.html
 xcuserdata/
 *.xcuserstate
 *.xcuserdata
+**/xcuserdata/*
+**/*.xcuserstate

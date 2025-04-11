@@ -77,6 +77,7 @@ struct WelcomeView: View {
                     onSignInPressed()
                 }
         }
+        .frame(maxWidth: UIScreen.main.bounds.width - 26)
     }
     
     private var policyLinks: some View {
@@ -145,5 +146,5 @@ struct WelcomeView: View {
 
 #Preview {
     WelcomeView()
-         
+        .previewEnvironment()
 }

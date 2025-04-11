@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+@MainActor
 protocol RemoteUserService: Sendable {
     func saveUser(user: UserModel) async throws
     func streamUser(userId: String) -> AsyncThrowingStream<UserModel, Error>

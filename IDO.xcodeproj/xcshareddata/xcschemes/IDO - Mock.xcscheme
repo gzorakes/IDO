@@ -63,6 +63,17 @@
                ReferencedContainer = "container:IDO.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "74368F542DA9817900FCF919"
+               BuildableName = "IDOUITests2.xctest"
+               BlueprintName = "IDOUITests2"
+               ReferencedContainer = "container:IDO.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction

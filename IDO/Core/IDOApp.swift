@@ -60,7 +60,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         
-        let config: BuildConfiguration
+        var config: BuildConfiguration
         
         #if MOCK
         config = .mock(isSignedIn: true)
@@ -70,6 +70,12 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         config = .prod
         #endif
 
+        if Utilities.isUITesting {
+            let isSignedIn = ProcessInfo.processInfo.arguments.contains("SIGNED_IN")
+            UserDefaults.showTabbarView = isSignedIn
+            config = .mock(isSignedIn: isSignedIn)
+        }
+        
         config.configure()
         dependencies = Dependencies(config: config)
         return true
@@ -143,7 +149,7 @@ struct Dependencies {
 
         case .dev:
             logManager = LogManager(services: [
-                ConsoleService(printParameters: false), FirebaseAnalyticsService(), MixPanelService(token: Keys.mixPanelToken, loggingEnabled: false)
+                ConsoleService(printParameters: false)/*, FirebaseAnalyticsService()*/, MixPanelService(token: Keys.mixPanelToken, loggingEnabled: false)
             ])
             authManager = AuthManager(service: FirebaseAuthService(), logManager: logManager)
             userManager = UserManager(services: ProductionUserServices(), logManager: logManager)
@@ -152,7 +158,7 @@ struct Dependencies {
             
         case .prod:
             logManager = LogManager(services: [
-                FirebaseAnalyticsService(), MixPanelService(token: Keys.mixPanelToken)
+                /*FirebaseAnalyticsService(), */MixPanelService(token: Keys.mixPanelToken)
             ])
             authManager = AuthManager(service: FirebaseAuthService(), logManager: logManager)
             userManager = UserManager(services: ProductionUserServices(), logManager: logManager)

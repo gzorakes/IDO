@@ -7,17 +7,17 @@
 
 import SwiftUI
 
-
-struct MockUserService: RemoteUserService {
+@MainActor
+class MockUserService: RemoteUserService {
     
-    let currentUser: UserModel?
+    @Published var currentUser: UserModel?
     
     init(user: UserModel? = nil) {
         self.currentUser = user
     }
     
     func saveUser(user: UserModel) async throws {
-        
+        currentUser = user
     }
     
     func streamUser(userId: String) -> AsyncThrowingStream<UserModel, any Error> {
@@ -25,14 +25,40 @@ struct MockUserService: RemoteUserService {
             if let currentUser {
                 continuation.yield(currentUser)
             }
+            
+            Task {
+                for await value in $currentUser.values {
+                    if let value {
+                        continuation.yield(value)
+                    }
+                }
+                        
+            }
         }
     }
     
     func deleteUser(userId: String) async throws {
-        
+        currentUser = nil
     }
     
     func markOnboardingCompleted(userId: String, profileColorHex: String, name: String, weddingDate: Date) async throws {
+        guard let currentUser else {
+            throw URLError(.unknown)
+        }
+        
+        self.currentUser = UserModel(
+            userId: currentUser.userId,
+            email: currentUser.email,
+            isAnonymous: currentUser.isAnonymous,
+            creationDate: currentUser.creationDate,
+            creationVersion: currentUser.creationVersion,
+            lastSignInDate: currentUser.lastSignInDate,
+            role: currentUser.role,
+            name: currentUser.name,
+            weddingDate: currentUser.weddingDate,
+            didCompleteOnboarding: true,
+            profileColorHex: profileColorHex
+        )
         
     }
 }

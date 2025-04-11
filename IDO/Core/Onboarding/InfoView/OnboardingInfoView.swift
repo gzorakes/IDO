@@ -136,4 +136,5 @@ struct OnboardingInfoView: View {
         OnboardingInfoView()
     }
     .environment(AppState())
+    .previewEnvironment()
 }
