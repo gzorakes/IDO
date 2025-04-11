@@ -78,3 +78,9 @@ swiftlint_report.html
 
 # Add this if you are using Xcode 12+
 *.xcscmblueprint
+*.xcuserstate
+*.xcuserdata
+*.xcworkspace
+xcuserdata/
+*.xcuserstate
+*.xcuserdata
