@@ -62,7 +62,12 @@ final class IDOUITests2: XCTestCase {
         XCTAssertTrue(categoriesExists)
         
         app.buttons["person"].tap()
+        let profileExists = app.navigationBars["Account"].exists
+        XCTAssertTrue(profileExists)
+        
         app.buttons["list.clipboard"].tap()
+        XCTAssertTrue(categoriesExists)
+        
         app.images["eventhall2"].tap()
         
         let categoriesButton = app.buttons["Categories"]
@@ -71,7 +76,6 @@ final class IDOUITests2: XCTestCase {
         categoriesButton.tap()
         app.images["guests2"].tap()
         categoriesButton.tap()
-        
     }
     
     
@@ -103,6 +107,26 @@ final class IDOUITests2: XCTestCase {
         let deleteButton = app.buttons["Delete"]
 //        XCTAssertTrue(deleteButton.waitForExistence(timeout: 3))
         deleteButton.tap()
+    }
+    
+    
+    func testSignOutFlow() throws {
+        let app = XCUIApplication()
+        app.launchArguments = ["UI_TESTING", "SIGNED_IN"]
+        app.launch()
         
+        // CategoriesView
+        let categoriesExists = app.navigationBars["Categories"].exists
+        XCTAssertTrue(categoriesExists)
+        
+        app.buttons["person"].tap()
+        let accountExists = app.navigationBars["Account"].exists
+        XCTAssertTrue(accountExists)
+        
+        app.buttons["Account"].tap()
+        app.buttons["Sign Out"].tap()
+        
+        let startButton = app.buttons["Get Started"].waitForExistence(timeout: 2)
+        XCTAssertTrue(startButton)
     }
 }
