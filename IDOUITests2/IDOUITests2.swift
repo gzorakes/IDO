@@ -46,7 +46,63 @@ final class IDOUITests2: XCTestCase {
         // OnboardingCompletedView
         app.buttons["Let's get started!"].tap()
         
+        // CategoriesView
         let categoriesExists = app.navigationBars["Categories"].exists
         XCTAssertTrue(categoriesExists)
+    }
+    
+    
+    func testTabBarFlow() throws {
+        let app = XCUIApplication()
+        app.launchArguments = ["UI_TESTING", "SIGNED_IN"]
+        app.launch()
+        
+        // CategoriesView
+        let categoriesExists = app.navigationBars["Categories"].exists
+        XCTAssertTrue(categoriesExists)
+        
+        app.buttons["person"].tap()
+        app.buttons["list.clipboard"].tap()
+        app.images["eventhall2"].tap()
+        
+        let categoriesButton = app.buttons["Categories"]
+        categoriesButton.tap()
+        app.images["church2"].tap()
+        categoriesButton.tap()
+        app.images["guests2"].tap()
+        categoriesButton.tap()
+        
+    }
+    
+    
+    func testAddingItem() throws {
+        let app = XCUIApplication()
+        app.launchArguments = ["UI_TESTING", "SIGNED_IN"]
+        app.launch()
+        
+        // CategoriesView
+        let categoriesExists = app.navigationBars["Categories"].exists
+        XCTAssertTrue(categoriesExists)
+        
+        app.images["eventhall2"].tap()
+        app.buttons["square.and.pencil"].tap()
+        app.navigationBars["Add Note"].tap()
+        
+        let field = app.textFields["Type..."]
+        XCTAssertTrue(field.waitForExistence(timeout: 5))
+        field.tap()
+        field.typeText("Adding a note")
+        
+        app.buttons["square.and.arrow.down"].tap()
+        
+        let firstCell = app.cells.firstMatch
+//        XCTAssertTrue(firstCell.waitForExistence(timeout: 3))
+        
+        firstCell.swipeLeft()
+        
+        let deleteButton = app.buttons["Delete"]
+//        XCTAssertTrue(deleteButton.waitForExistence(timeout: 3))
+        deleteButton.tap()
+        
     }
 }
