@@ -183,3 +183,27 @@ extension View {
             .environment(PushManager())
     }
 }
+
+
+@MainActor
+class DevPreview {
+    static let shared = DevPreview()
+    
+    let authManager: AuthManager
+    let userManager: UserManager
+    let aiManager: AIManager
+    let todoManager: TodoManager
+    let logManager: LogManager
+    let pushManager: PushManager
+    let appState: AppState
+    
+    init(isSignedIn: Bool = true) {
+        self.authManager = AuthManager(service: MockAuthService(user: isSignedIn ? .mock() : nil))
+        self.userManager = UserManager(services: MockUserServices(user: isSignedIn ? .mock : nil))
+        self.aiManager = AIManager(service: MockAIService())
+        self.todoManager = TodoManager(service: MockTodoService())
+        self.logManager = LogManager(services: [])
+        self.pushManager = PushManager()
+        self.appState = AppState()
+    }
+}
