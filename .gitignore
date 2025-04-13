@@ -1,62 +1,28 @@
-# Xcode .gitignore
-# This is a basic template for Xcode projects
-# which covers the majority of files and paths you'll want to ignore.
-
 ### Xcode ###
-# Xcode user settings
-xcuserdata/
+# User-specific files (IGNORE)
+**/xcuserdata/*
+*.xcuserstate
+*.xcuserdata
 
-# Xcode project settings
-project.xcworkspace/
+# Xcode workspace (CAUTION: Don't ignore the entire workspace!)
 *.xcodeproj/project.xcworkspace/xcuserdata/
-*.xcodeproj/xcuserdata/
 
-# Derived Data
+# DerivedData (build artifacts)
 DerivedData/
 
-# Compilation products
+# Build products
 *.o
-*.d
-
-# Compiled Static Libraries
 *.a
+*.d
 *.pch
-
-# Other files and folders
 *.bak
 *.tmp
 *.swp
 
-# OS X temporary files
-.DS_Store
-.AppleDouble
-.LSOverride
-
-# Thumbnails
-._*
-
-# Files that might appear in the root of a volume
-.DocumentRevisions-V100
-.fseventsd
-.Spotlight-V100
-.TemporaryItems
-.Trashes
-.VolumeIcon.icns
-.com.apple.timemachine.donotpresent
-
-# Directories potentially created on remote AFP share
-.AppleDB
-.AppleDesktop
-Network Trash Folder
-Temporary Items
-.apdisk
-
-### Swift ###
-# Add .build here if using Swift Package Manager
+# Swift Package Manager (CAUTION: Keep Package.resolved!)
 .build/
-
-# Add Packages here if using Swift Package Manager
-/Packages
+/Packages/
+/.swiftpm/
 
 # CocoaPods
 Pods/
@@ -65,9 +31,27 @@ Podfile.lock
 # Carthage
 Carthage/Build
 
-### fastlane ###
-# It is recommended to not store the screenshots in the git repo
-# Instead, use fastlane to re-generate the screenshots whenever they are needed
+### macOS ###
+.DS_Store
+.AppleDouble
+.LSOverride
+.Spotlight-V100
+.Trashes
+.fseventsd
+.DocumentRevisions-V100
+.TemporaryItems
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# AFP/networking artifacts
+.NetworkTrash/
+.AppleDB/
+.AppleDesktop/
+Network Trash Folder/
+Temporary Items/
+.apdisk
+
+### Fastlane ###
 fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots
@@ -75,14 +59,3 @@ fastlane/test_output
 
 ### SwiftLint ###
 swiftlint_report.html
-
-# Add this if you are using Xcode 12+
-*.xcscmblueprint
-*.xcuserstate
-*.xcuserdata
-*.xcworkspace
-xcuserdata/
-*.xcuserstate
-*.xcuserdata
-**/xcuserdata/*
-**/*.xcuserstate
