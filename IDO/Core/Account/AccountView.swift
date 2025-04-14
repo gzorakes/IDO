@@ -9,35 +9,35 @@ import SwiftUI
 import SwiftfulUtilities
 
 
+
 @Observable
 @MainActor
 class AccountViewModel {
     let authManager: AuthManager
     let userManager: UserManager
     let logManager: LogManager
-    let appState: AppState
+    
+    private(set) var isAnonymousUser: Bool = false
     
     var currentUser: UserModel?
-    var isAnonymousUser: Bool = false
-    
     var showCreateAccountView: Bool = false
     var showAlert: AnyAppAlert?
     var showRatingsModal: Bool = false
     
-    init(authManager: AuthManager, userManager: UserManager, logManager: LogManager, appState: AppState) {
+    init(authManager: AuthManager, userManager: UserManager, logManager: LogManager) {
         self.authManager = authManager
         self.userManager = userManager
         self.logManager = logManager
-        self.appState = appState
     }
     
-    func onSignOutPressed(onDismiss: @escaping () -> Void) {
+    
+    func onSignOutPressed(onDismiss: @escaping () async -> Void) {
         logManager.trackEvent(event: Event.signOutPressed)
         Task {
             do {
                 try authManager.signOut()
                 userManager.signOut()
-                await dismissScreen(onDismiss: onDismiss)
+                await onDismiss()
             } catch {
                 logManager.trackEvent(event: Event.signOutFailed(error: error))
                 showAlert = AnyAppAlert(error: error)
@@ -45,13 +45,7 @@ class AccountViewModel {
         }
     }
     
-    func dismissScreen(onDismiss: @escaping () async -> Void) async {
-        await onDismiss()
-        try? await Task.sleep(for: .seconds(1))
-        appState.updateViewState(showTabBarView: false)
-    }
-    
-    func onDeleteAccountPressed(onDismiss: @Sendable @escaping () async -> Void) async {
+    func onDeleteAccountPressed(onDismiss: @Sendable @escaping () async -> Void) {
         logManager.trackEvent(event: Event.deleteAccountPressed)
         showAlert = AnyAppAlert(
             title: "Delete account?",
@@ -59,25 +53,25 @@ class AccountViewModel {
             buttons: {
                 AnyView(
                     Button("Delete", role: .destructive, action: {
-                        Task {
-                            self.logManager.trackEvent(event: Event.deleteAccountConfirmed)
-                            await self.onDeleteAccountConfirmed(onDismiss: onDismiss)
-                        }
+                        self.logManager.trackEvent(event: Event.deleteAccountConfirmed)
+                        self.onDeleteAccountConfirmed(onDismiss: onDismiss)
                     })
                 )
             }
         )
     }
     
-    func onDeleteAccountConfirmed(onDismiss: @escaping () async -> Void) async {
-        do {
-            try await userManager.deleteCurrentUser()
-            try await authManager.deleteAccount()
-            logManager.deleteUserProfile()
-            await dismissScreen(onDismiss: onDismiss)
-        } catch {
-            logManager.trackEvent(event: Event.deleteAccountFailed(error: error))
-            showAlert = AnyAppAlert(error: error)
+    func onDeleteAccountConfirmed(onDismiss: @escaping () async -> Void) {
+        Task {
+            do {
+                try await userManager.deleteCurrentUser()
+                try await authManager.deleteAccount()
+                logManager.deleteUserProfile()
+                await onDismiss()
+            } catch {
+                logManager.trackEvent(event: Event.deleteAccountFailed(error: error))
+                showAlert = AnyAppAlert(error: error)
+            }
         }
     }
     
@@ -172,8 +166,9 @@ class AccountViewModel {
 struct AccountView: View {
     
     @Environment(\.dismiss) private var dismiss
+    @Environment(AppState.self) private var appState
     @State var viewModel: AccountViewModel
-    
+
     var body: some View {
         NavigationStack {
             List {
@@ -269,7 +264,9 @@ struct AccountView: View {
             .foregroundStyle(.primary)
         } else {
             Button {
-                viewModel.onSignOutPressed(onDismiss: { dismiss() })
+                viewModel.onSignOutPressed(onDismiss: {
+                    await dismissScreen()
+                })
             } label: {
                 Text("Sign Out")
             }
@@ -313,29 +310,21 @@ struct AccountView: View {
     private var deleteSection: some View {
         Section {
             Button {
-                Task {
-                    await viewModel.onDeleteAccountPressed {
-                        await dismiss()
-                    }
-                }
+                viewModel.onDeleteAccountPressed(onDismiss: {
+                    await dismissScreen()
+                })
             } label: {
                 Text("Delete Account")
                     .foregroundStyle(.red)
             }
         }
     }
-}
-
-#Preview("No auth") {
-    AccountView(
-        viewModel: AccountViewModel(
-            authManager: AuthManager(service: MockAuthService(user: nil)),
-            userManager: UserManager(services: MockUserServices(user: nil)),
-            logManager: DevPreview.shared.logManager,
-            appState: DevPreview.shared.appState
-        )
-    )
-    .previewEnvironment()
+        
+    private func dismissScreen() async {
+        dismiss()
+        try? await Task.sleep(for: .seconds(1))
+        appState.updateViewState(showTabBarView: false)
+    }
 }
 
 #Preview("Anonymous") {
@@ -344,7 +333,17 @@ struct AccountView: View {
             authManager: AuthManager(service: MockAuthService(user: UserAuthInfo.mock(isAnonymous: true))),
             userManager: UserManager(services: MockUserServices(user: .mock)),
             logManager: DevPreview.shared.logManager,
-            appState: DevPreview.shared.appState
+        )
+    )
+    .previewEnvironment()
+}
+
+#Preview("No auth") {
+    AccountView(
+        viewModel: AccountViewModel(
+            authManager: AuthManager(service: MockAuthService(user: nil)),
+            userManager: UserManager(services: MockUserServices(user: nil)),
+            logManager: DevPreview.shared.logManager,
         )
     )
     .previewEnvironment()
@@ -356,7 +355,6 @@ struct AccountView: View {
             authManager: AuthManager(service: MockAuthService(user: UserAuthInfo.mock(isAnonymous: false))),
             userManager: UserManager(services: MockUserServices(user: .mock)),
             logManager: DevPreview.shared.logManager,
-            appState: DevPreview.shared.appState
         )
     )
     .previewEnvironment()

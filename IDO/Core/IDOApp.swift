@@ -195,7 +195,6 @@ class DevPreview {
     let todoManager: TodoManager
     let logManager: LogManager
     let pushManager: PushManager
-    let appState: AppState
     
     init(isSignedIn: Bool = true) {
         self.authManager = AuthManager(service: MockAuthService(user: isSignedIn ? .mock() : nil))
@@ -204,6 +203,5 @@ class DevPreview {
         self.todoManager = TodoManager(service: MockTodoService())
         self.logManager = LogManager(services: [])
         self.pushManager = PushManager()
-        self.appState = AppState()
     }
 }
