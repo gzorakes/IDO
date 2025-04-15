@@ -13,6 +13,7 @@ import SwiftfulUtilities
 @Observable
 @MainActor
 class AccountViewModel {
+    let container: DependencyContainer
     let authManager: AuthManager
     let userManager: UserManager
     let logManager: LogManager
@@ -24,10 +25,11 @@ class AccountViewModel {
     var showAlert: AnyAppAlert?
     var showRatingsModal: Bool = false
     
-    init(authManager: AuthManager, userManager: UserManager, logManager: LogManager) {
-        self.authManager = authManager
-        self.userManager = userManager
-        self.logManager = logManager
+    init(container: DependencyContainer) {
+        self.container = container
+        self.authManager = container.resolve(AuthManager.self)!
+        self.userManager = container.resolve(UserManager.self)!
+        self.logManager = container.resolve(LogManager.self)!
     }
     
     
@@ -187,11 +189,7 @@ struct AccountView: View {
                 },
                 content: {
                     CreateAccountView(
-                        viewModel: CreateAccountViewModel(
-                            authManager: viewModel.authManager,
-                            userManager: viewModel.userManager,
-                            logManager: viewModel.logManager
-                        )
+                        viewModel: CreateAccountViewModel(container: viewModel.container)
                     )
                     .presentationDetents([.height(300)])
 
@@ -337,34 +335,37 @@ struct AccountView: View {
 }
 
 #Preview("Anonymous") {
-    AccountView(
-        viewModel: AccountViewModel(
-            authManager: AuthManager(service: MockAuthService(user: UserAuthInfo.mock(isAnonymous: true))),
-            userManager: UserManager(services: MockUserServices(user: .mock)),
-            logManager: DevPreview.shared.logManager,
-        )
+    let container = DevPreview.shared.container
+    container.register(AuthManager.self, service: AuthManager(service: MockAuthService(user: UserAuthInfo.mock(isAnonymous: true))))
+    container.register(UserManager.self, service: UserManager(services: MockUserServices(user: .mock)))
+    container.register(LogManager.self, service: LogManager(services: []))
+    
+    return AccountView(
+        viewModel: AccountViewModel(container: container)
     )
     .previewEnvironment()
 }
 
 #Preview("No auth") {
-    AccountView(
-        viewModel: AccountViewModel(
-            authManager: AuthManager(service: MockAuthService(user: nil)),
-            userManager: UserManager(services: MockUserServices(user: nil)),
-            logManager: DevPreview.shared.logManager,
-        )
+    let container = DevPreview.shared.container
+    container.register(AuthManager.self, service: AuthManager(service: MockAuthService(user: nil)))
+    container.register(UserManager.self, service: UserManager(services: MockUserServices(user: nil)))
+    container.register(LogManager.self, service: LogManager(services: []))
+    
+    return AccountView(
+        viewModel: AccountViewModel(container: container)
     )
     .previewEnvironment()
 }
 
 #Preview("Not anonymous") {
-    AccountView(
-        viewModel: AccountViewModel(
-            authManager: AuthManager(service: MockAuthService(user: UserAuthInfo.mock(isAnonymous: false))),
-            userManager: UserManager(services: MockUserServices(user: .mock)),
-            logManager: DevPreview.shared.logManager,
-        )
+    let container = DevPreview.shared.container
+    container.register(AuthManager.self, service: AuthManager(service: MockAuthService(user: UserAuthInfo.mock(isAnonymous: false))))
+    container.register(UserManager.self, service: UserManager(services: MockUserServices(user: .mock)))
+    container.register(LogManager.self, service: LogManager(services: []))
+    
+    return AccountView(
+        viewModel: AccountViewModel(container: container)
     )
     .previewEnvironment()
 }

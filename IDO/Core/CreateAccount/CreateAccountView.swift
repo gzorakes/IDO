@@ -15,10 +15,10 @@ class CreateAccountViewModel {
     private let userManager: UserManager
     private let logManager: LogManager
     
-    init(authManager: AuthManager, userManager: UserManager, logManager: LogManager) {
-        self.authManager = authManager
-        self.userManager = userManager
-        self.logManager = logManager
+    init(container: DependencyContainer) {
+        self.authManager = container.resolve(AuthManager.self)!
+        self.userManager = container.resolve(UserManager.self)!
+        self.logManager = container.resolve(LogManager.self)!
     }
     
     enum Event: LoggableEvent {
@@ -122,13 +122,7 @@ struct CreateAccountView: View {
 
 #Preview {
     CreateAccountView(
-        viewModel: CreateAccountViewModel(
-            authManager: DevPreview.shared.authManager,
-            userManager: DevPreview.shared.userManager,
-            logManager: DevPreview.shared.logManager
-        )
+        viewModel: CreateAccountViewModel(container: DevPreview.shared.container)
     )
     .previewEnvironment()
-//        .environment(UserManager(services: MockUserServices()))
-//        .environment(AuthManager(service: MockAuthService()))
 }

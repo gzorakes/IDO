@@ -9,18 +9,12 @@ import SwiftUI
 
 struct TabBarView: View {
     
-    @Environment(AuthManager.self) private var authManager
-    @Environment(UserManager.self) private var userManager
-    @Environment(LogManager.self) private var logManager
-    @Environment(PushManager.self) private var pushManager
+    @Environment(DependencyContainer.self) private var container
     
     var body: some View {
         TabView {
             CategoriesView(
-                viewModel: CategoriesViewModel(
-                    logManager: logManager,
-                    pushManager: pushManager
-                )
+                viewModel: CategoriesViewModel(container: container)
             )
             .tabItem {
                 Label("Notes", systemImage: "list.clipboard")
@@ -32,11 +26,7 @@ struct TabBarView: View {
 //                }
             
             AccountView(
-                viewModel: AccountViewModel(
-                    authManager: authManager,
-                    userManager: userManager,
-                    logManager: logManager
-                )
+                viewModel: AccountViewModel(container: container)
             )
             .tabItem {
                 Label("Account", systemImage: "person")

@@ -14,9 +14,9 @@ class CategoriesViewModel {
     private let logManager: LogManager
     private let pushManager: PushManager
     
-    init(logManager: LogManager, pushManager: PushManager) {
-        self.logManager = logManager
-        self.pushManager = pushManager
+    init(container: DependencyContainer) {
+        self.logManager = container.resolve(LogManager.self)!
+        self.pushManager = container.resolve(PushManager.self)!
     }
     
     private(set) var categories: [CategoryModel] = CategoryModel.allCategories
@@ -215,10 +215,7 @@ struct CategoriesView: View {
 
 #Preview {
     CategoriesView(
-        viewModel: CategoriesViewModel(
-            logManager: DevPreview.shared.logManager,
-            pushManager: DevPreview.shared.pushManager
-        )
+        viewModel: CategoriesViewModel(container: DevPreview.shared.container)
     )
     .previewEnvironment()
 }

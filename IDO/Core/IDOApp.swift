@@ -44,6 +44,7 @@ struct IDOApp: App {
     var body: some Scene {
         WindowGroup {
             AppView()
+                .environment(delegate.dependencies.container)
                 .environment(delegate.dependencies.authManager)
                 .environment(delegate.dependencies.userManager)
                 .environment(delegate.dependencies.aiManager)
@@ -121,9 +122,37 @@ enum BuildConfiguration {
     }
 }
 
+/*
+ almost same like @Environment implementation,
+ where we register dependencies in the root
+ of our app and then we pull whatever dependency
+ we need across the entire app
+*/
+@Observable
+@MainActor
+class DependencyContainer {
+    private var services: [String: Any] = [:]
+    
+    func register<T>(_ type: T.Type, service: T) {
+        let key = "\(type)"
+        services[key] = service
+    }
+    
+    func register<T>(_ type: T.Type, service: () -> T) {
+        let key = "\(type)"
+        services[key] = service()
+    }
+    
+    func resolve<T>(_ type: T.Type) -> T? {
+        let key = "\(type)"
+        return services[key] as? T
+    }
+}
+
 
 @MainActor
 struct Dependencies {
+    let container: DependencyContainer
     let authManager: AuthManager
     let userManager: UserManager
     let aiManager: AIManager
@@ -167,6 +196,15 @@ struct Dependencies {
         }
         
         pushManager = PushManager(logManager: logManager)
+        
+        let container = DependencyContainer()
+        container.register(AuthManager.self, service: authManager)
+        container.register(UserManager.self, service: userManager)
+        container.register(AIManager.self, service: aiManager)
+        container.register(TodoManager.self, service: todoManager)
+        container.register(LogManager.self, service: logManager)
+        container.register(PushManager.self, service: pushManager)
+        self.container = container
     }
 }
 
@@ -174,6 +212,7 @@ struct Dependencies {
 extension View {
     func previewEnvironment(isSignedIn: Bool = true) -> some View {
         self
+            .environment(DevPreview.shared.container)
             .environment(AuthManager(service: MockAuthService(user: isSignedIn ? .mock() : nil)))
             .environment(UserManager(services: MockUserServices(user: isSignedIn ? .mock : nil)))
             .environment(TodoManager(service: MockTodoService()))
@@ -189,6 +228,7 @@ extension View {
 class DevPreview {
     static let shared = DevPreview()
     
+    let container: DependencyContainer
     let authManager: AuthManager
     let userManager: UserManager
     let aiManager: AIManager
@@ -203,5 +243,14 @@ class DevPreview {
         self.todoManager = TodoManager(service: MockTodoService())
         self.logManager = LogManager(services: [])
         self.pushManager = PushManager()
+        
+        let container = DependencyContainer()
+        container.register(AuthManager.self, service: authManager)
+        container.register(UserManager.self, service: userManager)
+        container.register(AIManager.self, service: aiManager)
+        container.register(TodoManager.self, service: todoManager)
+        container.register(LogManager.self, service: logManager)
+        container.register(PushManager.self, service: pushManager)
+        self.container = container
     }
 }
