@@ -12,18 +12,25 @@ struct TabBarView: View {
     @Environment(AuthManager.self) private var authManager
     @Environment(UserManager.self) private var userManager
     @Environment(LogManager.self) private var logManager
-        
+    @Environment(PushManager.self) private var pushManager
+    
     var body: some View {
         TabView {
-            CategoriesView()
-                .tabItem {
-                    Label("Notes", systemImage: "list.clipboard")
-                }
+            CategoriesView(
+                viewModel: CategoriesViewModel(
+                    logManager: logManager,
+                    pushManager: pushManager
+                )
+            )
+            .tabItem {
+                Label("Notes", systemImage: "list.clipboard")
+            }
             
-            //            ImageGeneratorView()
-            //                .tabItem {
-            //                    Label("AI Generator", systemImage: "sparkles")
-            //                }
+//            ImageGeneratorView()
+//                .tabItem {
+//                    Label("AI Generator", systemImage: "sparkles")
+//                }
+            
             AccountView(
                 viewModel: AccountViewModel(
                     authManager: authManager,
@@ -31,9 +38,9 @@ struct TabBarView: View {
                     logManager: logManager
                 )
             )
-                .tabItem {
-                    Label("Account", systemImage: "person")
-                }
+            .tabItem {
+                Label("Account", systemImage: "person")
+            }
         }
     }
 }

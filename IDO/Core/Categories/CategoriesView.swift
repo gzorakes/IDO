@@ -7,18 +7,26 @@
 
 import SwiftUI
 
-struct CategoriesView: View {
+
+@Observable
+@MainActor
+class CategoriesViewModel {
+    private let logManager: LogManager
+    private let pushManager: PushManager
     
-    @Environment(LogManager.self) private var logManager
-    @Environment(PushManager.self) private var pushManager
+    init(logManager: LogManager, pushManager: PushManager) {
+        self.logManager = logManager
+        self.pushManager = pushManager
+    }
     
-    @State private var categories: [CategoryModel] = CategoryModel.allCategories
-    @State private var path: [CategoryModel] = []
-    @State private var showDevSettings: Bool = false
-    @State private var showNotificationButton: Bool = false
-    @State private var showPushNotificationModal: Bool = false
+    private(set) var categories: [CategoryModel] = CategoryModel.allCategories
+    private(set) var showNotificationButton: Bool = false
     
-    private var showDevSettingsButton: Bool {
+    var path: [CategoryModel] = []
+    var showDevSettings: Bool = false
+    var showPushNotificationModal: Bool = false
+    
+    var showDevSettingsButton: Bool {
     #if DEV || MOCK
         return true
     #else
@@ -26,70 +34,20 @@ struct CategoriesView: View {
     #endif
     }
     
-    var body: some View {
-        NavigationStack(path: $path) {
-                VStack {
-                    categoriesGrid
-                        .removeListRowFormatting()
-                }
-                .navigationTitle("Categories")
-                .navigationBarTitleDisplayMode(.inline)
-                .navigationDestination(for: CategoryModel.self) { newValue in
-                    TodoListView(category: newValue)
-                }
-                .toolbar {
-                    ToolbarItem(placement: .topBarLeading) {
-                        if showDevSettingsButton {
-                            devSettingsButton
-                        }
-                    }
-                    ToolbarItem(placement: .topBarTrailing) {
-                        if showNotificationButton {
-                            pushNotificationButton
-                        }
-                    }
-                }
-                .showModal(showModal: $showPushNotificationModal, content: {
-                    pushNotificationModal
-                })
-                .sheet(isPresented: $showDevSettings) {
-                    DevSettingsView()
-                }
-                .task {
-                    await handleShowPushNotificationsButton()
-                }
-                .onFirstAppear {
-                    schedulePushNotifications()
-                }
-                .screenAppearAnalytics(name: "CategoriesView")
-        }
-    }
-    
-    private var pushNotificationButton: some View {
-        Image(systemName: "bell.fill")
-            .font(.headline)
-            .padding(4)
-            .tappableBackground()
-            .foregroundStyle(.accent)
-            .anyButton {
-                onPushNotificationPressed()
-            }
-    }
-    
-    private func schedulePushNotifications() {
+    func schedulePushNotifications() {
         pushManager.schedulePushNotificationsForTheNextWeek()
     }
     
-    private func handleShowPushNotificationsButton() async {
+    func handleShowPushNotificationsButton() async {
         showNotificationButton = await pushManager.canRequestAuthorization()
     }
     
-    private func onPushNotificationPressed() {
+    func onPushNotificationPressed() {
         showPushNotificationModal = true
         logManager.trackEvent(event: Event.pushNotifsStart)
     }
     
-    private func onEnablePushNotificationsPressed() {
+    func onEnablePushNotificationsPressed() {
         showPushNotificationModal = false
         
         Task {
@@ -99,63 +57,16 @@ struct CategoriesView: View {
         }
     }
     
-    private func onCancelPushNotificationsPressed() {
+    func onCancelPushNotificationsPressed() {
         showPushNotificationModal = false
         logManager.trackEvent(event: Event.pushNotifsCancel)
     }
     
-    private var pushNotificationModal: some View {
-        CustomModalView(
-            title: "Enable push notifications?",
-            subtitle: "We'll send you reminders and updates!",
-            primaryButtonTitle: "Enable",
-            primaryButtonAction: {
-                onEnablePushNotificationsPressed()
-            },
-            secondaryButtonTitle: "Cancel") {
-                onCancelPushNotificationsPressed()
-            }
-    }
-        
-    private var devSettingsButton: some View {
-        Text("DEV ⚙️")
-            .font(.footnote).bold()
-            .foregroundStyle(.white)
-            .padding(6)
-            .background(.accent)
-            .cornerRadius(8)
-            .anyButton(.press) {
-                onDevSettingsPressed()
-            }
-    }
-    
-    private func onDevSettingsPressed() {
+    func onDevSettingsPressed() {
         showDevSettings = true
-
     }
     
-    private var categoriesGrid: some View {
-        LazyVGrid(
-            columns: Array(repeating: GridItem(.flexible(), spacing: -30), count: 2),
-            alignment: .center,
-            spacing: 16,
-            content: {
-                Section {
-                    ForEach(categories) { category in
-                        HeroCellView(title: category.title, imageName: category.imageName, font: .callout)
-                            .anyButton(.press) {
-                                onCategoryPressed(category: category)
-                            }
-                            .frame(width: UIScreen.main.bounds.width / 2 - 32)
-                            .frame(height: UIScreen.main.bounds.height / 10 )
-                            .shadow(radius: 5)
-                    }
-                }
-            }
-        )
-    }
-    
-    private func onCategoryPressed(category: CategoryModel) {
+    func onCategoryPressed(category: CategoryModel) {
         path.append(category)
         logManager.trackEvent(event: Event.categoryPressed(category: category))
     }
@@ -187,7 +98,6 @@ struct CategoriesView: View {
             default:
                 return nil
             }
-            
         }
         
         var type: LogType {
@@ -197,10 +107,118 @@ struct CategoriesView: View {
             }
         }
     }
+}
 
+
+struct CategoriesView: View {
+    
+    @State var viewModel: CategoriesViewModel
+    
+    var body: some View {
+        NavigationStack(path: $viewModel.path) {
+                VStack {
+                    categoriesGrid
+                        .removeListRowFormatting()
+                }
+                .navigationTitle("Categories")
+                .navigationBarTitleDisplayMode(.inline)
+                .navigationDestination(for: CategoryModel.self) { newValue in
+                    TodoListView(category: newValue)
+                }
+                .toolbar {
+                    ToolbarItem(placement: .topBarLeading) {
+                        if viewModel.showDevSettingsButton {
+                            devSettingsButton
+                        }
+                    }
+                    ToolbarItem(placement: .topBarTrailing) {
+                        if viewModel.showNotificationButton {
+                            pushNotificationButton
+                        }
+                    }
+                }
+                .showModal(showModal: $viewModel.showPushNotificationModal, content: {
+                    pushNotificationModal
+                })
+                .sheet(isPresented: $viewModel.showDevSettings) {
+                    DevSettingsView()
+                }
+                .task {
+                    await viewModel.handleShowPushNotificationsButton()
+                }
+                .onFirstAppear {
+                    viewModel.schedulePushNotifications()
+                }
+                .screenAppearAnalytics(name: "CategoriesView")
+        }
+    }
+    
+    private var pushNotificationButton: some View {
+        Image(systemName: "bell.fill")
+            .font(.headline)
+            .padding(4)
+            .tappableBackground()
+            .foregroundStyle(.accent)
+            .anyButton {
+                viewModel.onPushNotificationPressed()
+            }
+    }
+    
+    
+    private var pushNotificationModal: some View {
+        CustomModalView(
+            title: "Enable push notifications?",
+            subtitle: "We'll send you reminders and updates!",
+            primaryButtonTitle: "Enable",
+            primaryButtonAction: {
+                viewModel.onEnablePushNotificationsPressed()
+            },
+            secondaryButtonTitle: "Cancel") {
+                viewModel.onCancelPushNotificationsPressed()
+            }
+    }
+        
+    private var devSettingsButton: some View {
+        Text("DEV ⚙️")
+            .font(.footnote).bold()
+            .foregroundStyle(.white)
+            .padding(6)
+            .background(.accent)
+            .cornerRadius(8)
+            .anyButton(.press) {
+                viewModel.onDevSettingsPressed()
+            }
+    }
+    
+    
+    private var categoriesGrid: some View {
+        LazyVGrid(
+            columns: Array(repeating: GridItem(.flexible(), spacing: -30), count: 2),
+            alignment: .center,
+            spacing: 16,
+            content: {
+                Section {
+                    ForEach(viewModel.categories) { category in
+                        HeroCellView(title: category.title, imageName: category.imageName, font: .callout)
+                            .anyButton(.press) {
+                                viewModel.onCategoryPressed(category: category)
+                            }
+                            .frame(width: UIScreen.main.bounds.width / 2 - 32)
+                            .frame(height: UIScreen.main.bounds.height / 10 )
+                            .shadow(radius: 5)
+                    }
+                }
+            }
+        )
+    }
 }
 
 #Preview {
-    CategoriesView()
-        .previewEnvironment()
+    CategoriesView(
+        viewModel: CategoriesViewModel(
+            logManager: DevPreview.shared.logManager,
+            pushManager: DevPreview.shared.pushManager
+        )
+    )
+    .previewEnvironment()
 }
