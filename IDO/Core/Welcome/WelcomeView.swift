@@ -10,6 +10,8 @@ import SwiftUI
 struct WelcomeView: View {
     
     @Environment(AppState.self) private var root
+    @Environment(AuthManager.self) private var authManager
+    @Environment(UserManager.self) private var userManager
     @Environment(LogManager.self) private var logManager
     
     @State var imageName: String = Constants.randomImage
@@ -36,6 +38,11 @@ struct WelcomeView: View {
         .screenAppearAnalytics(name: "WelcomeView")
         .sheet(isPresented: $showSignInView) {
             CreateAccountView(
+                viewModel: CreateAccountViewModel(
+                    authManager: authManager,
+                    userManager: userManager,
+                    logManager: logManager
+                ),
                 title: "Sign in",
                 subtitle: "Connect to an existing account",
                 onDidSignIn: { isNewUser in

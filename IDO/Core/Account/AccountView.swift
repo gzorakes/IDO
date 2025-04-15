@@ -180,10 +180,19 @@ struct AccountView: View {
             }
             .navigationTitle("Account")
             .navigationBarTitleDisplayMode(.inline)
-            .sheet(isPresented: $viewModel.showCreateAccountView, onDismiss: {
-                viewModel.setAnonymousAccountStatus()
-            }, content: {
-                CreateAccountView()
+            .sheet(
+                isPresented: $viewModel.showCreateAccountView,
+                onDismiss: {
+                    viewModel.setAnonymousAccountStatus()
+                },
+                content: {
+                    CreateAccountView(
+                        viewModel: CreateAccountViewModel(
+                            authManager: viewModel.authManager,
+                            userManager: viewModel.userManager,
+                            logManager: viewModel.logManager
+                        )
+                    )
                     .presentationDetents([.height(300)])
 
             })
