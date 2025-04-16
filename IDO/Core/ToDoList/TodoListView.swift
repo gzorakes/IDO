@@ -8,13 +8,12 @@
 import SwiftUI
 import PhotosUI
 
-
 @Observable
 @MainActor
 class TodoListViewModel {
-    private let authManager: AuthManager
-    private let todoManager: TodoManager
-    private let logManager: LogManager
+    let authManager: AuthManager
+    let todoManager: TodoManager
+    let logManager: LogManager
     
     init(container: DependencyContainer) {
         self.authManager = container.resolve(AuthManager.self)!
@@ -22,9 +21,9 @@ class TodoListViewModel {
         self.logManager = container.resolve(LogManager.self)!
     }
     
-    private(set)var todoItems: [TodoItemModel] = []
     private(set) var imageItem: UIImage?
     
+    var todoItems: [TodoItemModel] = []
     var photosPickerItem: PhotosPickerItem?
     var selectedImage: ImageWrapper?
     var editingItem: TodoItemModel?
