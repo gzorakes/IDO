@@ -26,7 +26,7 @@ struct TabBarView: View {
 //                }
             
             AccountView(
-                viewModel: AccountViewModel(container: container)
+                viewModel: AccountViewModel(interactor: ProdAccountInteractor(container: container), container: container)
             )
             .tabItem {
                 Label("Account", systemImage: "person")

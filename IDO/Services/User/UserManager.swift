@@ -82,7 +82,7 @@ class UserManager  {
         logManager?.trackEvent(event: Event.signOut)
     }
     
-    func deleteCurrentUser() async throws{
+    func deleteCurrentUser() async throws {
         logManager?.trackEvent(event: Event.deleteAccountStart)
 
         let uid = try currentUserId()

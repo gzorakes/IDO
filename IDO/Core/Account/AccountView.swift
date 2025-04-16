@@ -8,15 +8,75 @@
 import SwiftUI
 import SwiftfulUtilities
 
+@MainActor
+protocol AccountInteractor {
+    var auth: UserAuthInfo? { get }
+    var currentUser: UserModel? { get }
+    
+    func authSignOut() throws
+    func deleteAccount() async throws
+    func userSignOut()
+    func deleteCurrentUser() async throws
+    func trackEvent(event: LoggableEvent)
+    func deleteUserProfile()
+}
+
+@MainActor
+struct ProdAccountInteractor: AccountInteractor {
+    let authManager: AuthManager
+    let userManager: UserManager
+    let logManager: LogManager
+    
+    init(container: DependencyContainer) {
+        self.authManager = container.resolve(AuthManager.self)!
+        self.userManager = container.resolve(UserManager.self)!
+        self.logManager = container.resolve(LogManager.self)!
+    }
+    
+    var auth: UserAuthInfo? {
+        authManager.auth
+    }
+    
+    var currentUser: UserModel? {
+        userManager.currentUser
+    }
+    
+    func authSignOut() throws {
+        try authManager.signOut()
+    }
+    
+    func deleteAccount() async throws {
+        try await authManager.deleteAccount()
+    }
+    
+    func userSignOut() {
+        userManager.signOut()
+    }
+    
+    func deleteCurrentUser() async throws {
+        try await userManager.deleteCurrentUser()
+    }
+    
+    func trackEvent(event: any LoggableEvent) {
+        logManager.trackEvent(event: event)
+    }
+    
+    func deleteUserProfile() {
+        logManager.deleteUserProfile()
+    }
+}
 
 
 @Observable
 @MainActor
 class AccountViewModel {
+    
+    let interactor: AccountInteractor
     let container: DependencyContainer
-    let authManager: AuthManager
-    let userManager: UserManager
-    let logManager: LogManager
+//    let container: DependencyContainer
+//    let authManager: AuthManager
+//    let userManager: UserManager
+//    let logManager: LogManager
     
     private(set) var isAnonymousUser: Bool = false
     
@@ -25,37 +85,35 @@ class AccountViewModel {
     var showAlert: AnyAppAlert?
     var showRatingsModal: Bool = false
     
-    init(container: DependencyContainer) {
+    init(interactor: AccountInteractor, container: DependencyContainer) {
+        self.interactor = interactor
         self.container = container
-        self.authManager = container.resolve(AuthManager.self)!
-        self.userManager = container.resolve(UserManager.self)!
-        self.logManager = container.resolve(LogManager.self)!
     }
     
     
     func onSignOutPressed(onDismiss: @escaping () async -> Void) {
-        logManager.trackEvent(event: Event.signOutPressed)
+        interactor.trackEvent(event: Event.signOutPressed)
         Task {
             do {
-                try authManager.signOut()
-                userManager.signOut()
+                try interactor.authSignOut()
+                interactor.userSignOut()
                 await onDismiss()
             } catch {
-                logManager.trackEvent(event: Event.signOutFailed(error: error))
+                interactor.trackEvent(event: Event.signOutFailed(error: error))
                 showAlert = AnyAppAlert(error: error)
             }
         }
     }
     
     func onDeleteAccountPressed(onDismiss: @Sendable @escaping () async -> Void) {
-        logManager.trackEvent(event: Event.deleteAccountPressed)
+        interactor.trackEvent(event: Event.deleteAccountPressed)
         showAlert = AnyAppAlert(
             title: "Delete account?",
             subtitle: "This action is permanent and cannot be undone. Your data will be deleted from our server forever.",
             buttons: {
                 AnyView(
                     Button("Delete", role: .destructive, action: {
-                        self.logManager.trackEvent(event: Event.deleteAccountConfirmed)
+                        self.interactor.trackEvent(event: Event.deleteAccountConfirmed)
                         self.onDeleteAccountConfirmed(onDismiss: onDismiss)
                     })
                 )
@@ -66,35 +124,35 @@ class AccountViewModel {
     func onDeleteAccountConfirmed(onDismiss: @escaping () async -> Void) {
         Task {
             do {
-                try await userManager.deleteCurrentUser()
-                try await authManager.deleteAccount()
-                logManager.deleteUserProfile()
+                try await interactor.deleteCurrentUser()
+                try await interactor.deleteAccount()
+                interactor.deleteUserProfile()
                 await onDismiss()
             } catch {
-                logManager.trackEvent(event: Event.deleteAccountFailed(error: error))
+                interactor.trackEvent(event: Event.deleteAccountFailed(error: error))
                 showAlert = AnyAppAlert(error: error)
             }
         }
     }
     
     func onRatingsButtonPressed() {
-        logManager.trackEvent(event: Event.ratingsPressed)
+        interactor.trackEvent(event: Event.ratingsPressed)
         showRatingsModal = true
     }
     
     func onEnjoyingAppYesPressed() {
-        logManager.trackEvent(event: Event.ratingsYesPressed)
+        interactor.trackEvent(event: Event.ratingsYesPressed)
         showRatingsModal = false
         AppStoreRatingsHelper.requestRatingsReview()
     }
     
     func onEnjoyingAppNoPressed() {
-        logManager.trackEvent(event: Event.ratingsNoPressed)
+        interactor.trackEvent(event: Event.ratingsNoPressed)
         showRatingsModal = false
     }
     
     func onContactUsPressed() {
-        logManager.trackEvent(event: Event.contactUsPressed)
+        interactor.trackEvent(event: Event.contactUsPressed)
 
         let email = "zorakisgeorge@gmail.com"
         let emailString = "mailto:\(email)"
@@ -107,12 +165,12 @@ class AccountViewModel {
     }
     
     func onCreateAccountPressed() {
-        logManager.trackEvent(event: Event.createAccountPressed)
+        interactor.trackEvent(event: Event.createAccountPressed)
         showCreateAccountView = true
     }
     
     func setAnonymousAccountStatus() {
-        isAnonymousUser = authManager.auth?.isAnonymous == true
+        isAnonymousUser = interactor.auth?.isAnonymous == true
     }
     
     enum Event: LoggableEvent {
@@ -198,7 +256,7 @@ struct AccountView: View {
                 viewModel.setAnonymousAccountStatus()
             }
             .task {
-                viewModel.currentUser = viewModel.userManager.currentUser
+                viewModel.currentUser = viewModel.interactor.currentUser
             }
             .showCustomAlert(alert: $viewModel.showAlert)
             .screenAppearAnalytics(name: "AccountView")
@@ -341,7 +399,10 @@ struct AccountView: View {
     container.register(LogManager.self, service: LogManager(services: []))
     
     return AccountView(
-        viewModel: AccountViewModel(container: container)
+        viewModel: AccountViewModel(
+            interactor: ProdAccountInteractor(container: container),
+            container: container
+        )
     )
     .previewEnvironment()
 }
@@ -353,7 +414,10 @@ struct AccountView: View {
     container.register(LogManager.self, service: LogManager(services: []))
     
     return AccountView(
-        viewModel: AccountViewModel(container: container)
+        viewModel: AccountViewModel(
+            interactor: ProdAccountInteractor(container: container),
+            container: container
+        )
     )
     .previewEnvironment()
 }
@@ -365,7 +429,10 @@ struct AccountView: View {
     container.register(LogManager.self, service: LogManager(services: []))
     
     return AccountView(
-        viewModel: AccountViewModel(container: container)
+        viewModel: AccountViewModel(
+            interactor: ProdAccountInteractor(container: container),
+            container: container
+        )
     )
     .previewEnvironment()
 }

@@ -25,7 +25,7 @@ struct AccountViewTests {
         container.register(LogManager.self, service: logManager)
         
         // Given
-        let viewModel = AccountViewModel(container: container)
+        let viewModel = AccountViewModel(interactor: ProdAccountInteractor(container: container))
         
         // When
         viewModel.setAnonymousAccountStatus()
@@ -45,7 +45,7 @@ struct AccountViewTests {
             container.register(UserManager.self, service: userManager)
             container.register(LogManager.self, service: logManager)
 
-            let viewModel = AccountViewModel(container: container)
+            let viewModel = AccountViewModel(interactor: ProdAccountInteractor(container: container))
             viewModel.setAnonymousAccountStatus()
 
             #expect(viewModel.isAnonymousUser == true)
