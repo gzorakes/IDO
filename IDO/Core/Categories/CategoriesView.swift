@@ -11,10 +11,12 @@ import SwiftUI
 @Observable
 @MainActor
 class CategoriesViewModel {
+    let container: DependencyContainer
     private let logManager: LogManager
     private let pushManager: PushManager
     
     init(container: DependencyContainer) {
+        self.container = container
         self.logManager = container.resolve(LogManager.self)!
         self.pushManager = container.resolve(PushManager.self)!
     }
@@ -123,7 +125,7 @@ struct CategoriesView: View {
                 .navigationTitle("Categories")
                 .navigationBarTitleDisplayMode(.inline)
                 .navigationDestination(for: CategoryModel.self) { newValue in
-                    TodoListView(category: newValue)
+                    TodoListView(viewModel: TodoListViewModel(container: viewModel.container), category: newValue)
                 }
                 .toolbar {
                     ToolbarItem(placement: .topBarLeading) {

@@ -224,11 +224,30 @@ extension View {
 }
 
 
+
 @MainActor
 class DevPreview {
     static let shared = DevPreview()
     
-    let container: DependencyContainer
+    /*
+     Because we are using a shared instance, meaning that all the previews
+     accesing the same container. So if all compiling at the same time, they are
+     going to update the container at the same time
+     So rather than initializing one on launch, we create a new container for
+     every preview. So every time we call container, we run the calculated variable.
+     (calculated variables trigger every time you access them)
+     So every time we return a new container
+     */
+    var container: DependencyContainer {
+        let container = DependencyContainer()
+        container.register(AuthManager.self, service: authManager)
+        container.register(UserManager.self, service: userManager)
+        container.register(AIManager.self, service: aiManager)
+        container.register(TodoManager.self, service: todoManager)
+        container.register(LogManager.self, service: logManager)
+        container.register(PushManager.self, service: pushManager)
+        return container
+    }
     let authManager: AuthManager
     let userManager: UserManager
     let aiManager: AIManager
@@ -244,13 +263,6 @@ class DevPreview {
         self.logManager = LogManager(services: [])
         self.pushManager = PushManager()
         
-        let container = DependencyContainer()
-        container.register(AuthManager.self, service: authManager)
-        container.register(UserManager.self, service: userManager)
-        container.register(AIManager.self, service: aiManager)
-        container.register(TodoManager.self, service: todoManager)
-        container.register(LogManager.self, service: logManager)
-        container.register(PushManager.self, service: pushManager)
-        self.container = container
+        
     }
 }
