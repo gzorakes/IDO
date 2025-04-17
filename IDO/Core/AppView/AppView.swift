@@ -13,6 +13,7 @@ struct AppView: View {
     @Environment(AuthManager.self) private var authManager
     @Environment(UserManager.self) private var userManager
     @Environment(LogManager.self) private var logManager
+    @Environment(DependencyContainer.self) private var container
     @State var appState: AppState = AppState()
     
     var body: some View {
@@ -22,7 +23,7 @@ struct AppView: View {
                 TabBarView()
             },
             onboadingView: {
-                WelcomeView()
+                WelcomeView(viewModel: WelcomeViewModel(interactor: CoreInteractor(container: container)))
             }
         )
         .environment(appState)
