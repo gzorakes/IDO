@@ -39,7 +39,7 @@ struct WelcomeView: View {
         .screenAppearAnalytics(name: "WelcomeView")
         .sheet(isPresented: $showSignInView) {
             CreateAccountView(
-                viewModel: CreateAccountViewModel(container: container),
+                viewModel: CreateAccountViewModel(interactor: CoreInteractor(container: container)),
                 title: "Sign in",
                 subtitle: "Connect to an existing account",
                 onDidSignIn: { isNewUser in

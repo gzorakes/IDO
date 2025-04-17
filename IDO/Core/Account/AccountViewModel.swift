@@ -12,58 +12,14 @@ protocol AccountInteractor {
     var auth: UserAuthInfo? { get }
     var currentUser: UserModel? { get }
     
-    func authSignOut() throws
+    func signOut() throws
     func deleteAccount() async throws
-    func userSignOut()
     func deleteCurrentUser() async throws
     func trackEvent(event: LoggableEvent)
     func deleteUserProfile()
 }
 
-@MainActor
-struct ProdAccountInteractor: AccountInteractor {
-    let authManager: AuthManager
-    let userManager: UserManager
-    let logManager: LogManager
-    
-    init(container: DependencyContainer) {
-        self.authManager = container.resolve(AuthManager.self)!
-        self.userManager = container.resolve(UserManager.self)!
-        self.logManager = container.resolve(LogManager.self)!
-    }
-    
-    var auth: UserAuthInfo? {
-        authManager.auth
-    }
-    
-    var currentUser: UserModel? {
-        userManager.currentUser
-    }
-    
-    func authSignOut() throws {
-        try authManager.signOut()
-    }
-    
-    func deleteAccount() async throws {
-        try await authManager.deleteAccount()
-    }
-    
-    func userSignOut() {
-        userManager.signOut()
-    }
-    
-    func deleteCurrentUser() async throws {
-        try await userManager.deleteCurrentUser()
-    }
-    
-    func trackEvent(event: any LoggableEvent) {
-        logManager.trackEvent(event: event)
-    }
-    
-    func deleteUserProfile() {
-        logManager.deleteUserProfile()
-    }
-}
+extension CoreInteractor: AccountInteractor { }
 
 
 @Observable
@@ -71,11 +27,6 @@ struct ProdAccountInteractor: AccountInteractor {
 class AccountViewModel {
     
     let interactor: AccountInteractor
-    let container: DependencyContainer
-//    let container: DependencyContainer
-//    let authManager: AuthManager
-//    let userManager: UserManager
-//    let logManager: LogManager
     
     private(set) var isAnonymousUser: Bool = false
     
@@ -84,9 +35,8 @@ class AccountViewModel {
     var showAlert: AnyAppAlert?
     var showRatingsModal: Bool = false
     
-    init(interactor: AccountInteractor, container: DependencyContainer) {
+    init(interactor: AccountInteractor) {
         self.interactor = interactor
-        self.container = container
     }
     
     
@@ -94,8 +44,7 @@ class AccountViewModel {
         interactor.trackEvent(event: Event.signOutPressed)
         Task {
             do {
-                try interactor.authSignOut()
-                interactor.userSignOut()
+                try interactor.signOut()
                 await onDismiss()
             } catch {
                 interactor.trackEvent(event: Event.signOutFailed(error: error))

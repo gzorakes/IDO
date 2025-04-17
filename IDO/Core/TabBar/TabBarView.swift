@@ -14,7 +14,7 @@ struct TabBarView: View {
     var body: some View {
         TabView {
             CategoriesView(
-                viewModel: CategoriesViewModel(container: container)
+                viewModel: CategoriesViewModel(interactor: CoreInteractor(container: container))
             )
             .tabItem {
                 Label("Notes", systemImage: "list.clipboard")
@@ -26,7 +26,7 @@ struct TabBarView: View {
 //                }
             
             AccountView(
-                viewModel: AccountViewModel(interactor: ProdAccountInteractor(container: container), container: container)
+                viewModel: AccountViewModel(interactor: CoreInteractor(container: container))
             )
             .tabItem {
                 Label("Account", systemImage: "person")

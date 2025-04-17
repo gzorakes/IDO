@@ -12,6 +12,7 @@ struct AccountView: View {
     
     @Environment(\.dismiss) private var dismiss
     @Environment(AppState.self) private var appState
+    @Environment(DependencyContainer.self) private var container
     @State var viewModel: AccountViewModel
 
     var body: some View {
@@ -32,7 +33,7 @@ struct AccountView: View {
                 },
                 content: {
                     CreateAccountView(
-                        viewModel: CreateAccountViewModel(container: viewModel.container)
+                        viewModel: CreateAccountViewModel(interactor: CoreInteractor(container: container))
                     )
                     .presentationDetents([.height(300)])
 
@@ -185,8 +186,7 @@ struct AccountView: View {
     
     return AccountView(
         viewModel: AccountViewModel(
-            interactor: ProdAccountInteractor(container: container),
-            container: container
+            interactor: CoreInteractor(container: container)
         )
     )
     .previewEnvironment()
@@ -200,8 +200,7 @@ struct AccountView: View {
     
     return AccountView(
         viewModel: AccountViewModel(
-            interactor: ProdAccountInteractor(container: container),
-            container: container
+            interactor: CoreInteractor(container: container)
         )
     )
     .previewEnvironment()
@@ -215,8 +214,7 @@ struct AccountView: View {
     
     return AccountView(
         viewModel: AccountViewModel(
-            interactor: ProdAccountInteractor(container: container),
-            container: container
+            interactor: CoreInteractor(container: container)
         )
     )
     .previewEnvironment()
