@@ -4,20 +4,12 @@
 //
 //  Created by George Zorakis on 16/3/25.
 //
-
 import SwiftUI
+
 
 struct ImageGeneratorView: View {
     
-    @Environment(AIManager.self) private var aiManager
-    
-    @State private var textFieldText: String = ""
-    @State private var showAlert: AnyAppAlert?
-    
-    @State private var isGenerating: Bool = false
-    @State private var generatedImage: UIImage?
-    @State private var title: String?
-    
+    @State var viewModel: ImageGeneratorViewModel
     
     var body: some View {
         VStack(spacing: 0) {
@@ -28,12 +20,12 @@ struct ImageGeneratorView: View {
         }
         .navigationTitle("Image Generator")
         .toolbarTitleDisplayMode(.inline)
-        .showCustomAlert(alert: $showAlert)
+        .showCustomAlert(alert: $viewModel.showAlert)
     }
     
     private var generatedImageSection: some View {
         VStack {
-            if let generatedImage = generatedImage {
+            if let generatedImage = viewModel.generatedImage {
                 Image(uiImage: generatedImage)
                     .resizable()
                     .scaledToFit()
@@ -71,7 +63,7 @@ struct ImageGeneratorView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 16))
             }
             
-            if let title {
+            if let title = viewModel.title {
                 Text(title)
                     .lineLimit(3...)
                     .foregroundStyle(.secondary)
@@ -81,14 +73,13 @@ struct ImageGeneratorView: View {
     }
     
     private var textFieldSection: some View {
-        
-        TextField("Type...", text: $textFieldText)
+        TextField("Type...", text: $viewModel.textFieldText)
             .keyboardType(.alphabet)
             .autocorrectionDisabled()
             .padding(12)
             .padding(.trailing, 50)
             .overlay(alignment: .trailing) {
-                if isGenerating {
+                if viewModel.isGenerating {
                     ProgressView()
                         .padding(.trailing, 12)
                         .tint(.accent)
@@ -99,7 +90,7 @@ struct ImageGeneratorView: View {
                         .foregroundStyle(.accent)
                         .anyButton(.plain) {
 //                            onSendMessagePressed()
-                            onGenerateImagePressed()
+                            viewModel.onGenerateImagePressed()
                         }
                 }
             }
@@ -116,44 +107,11 @@ struct ImageGeneratorView: View {
             .padding(.vertical, 6)
             .background(Color(uiColor: .secondarySystemBackground))
     }
-    
-    private func checkIfTextIsValid(text: String) -> Bool {
-        let minimumCharacterCount = 3
-        
-        guard text.count >= minimumCharacterCount else {
-            return false
-        }
-        
-        return true
-    }
-    
-    private func onGenerateImagePressed() {
-        
-        let content = textFieldText
-        let isValid = checkIfTextIsValid(text: content)
-        if isValid {
-            isGenerating = true
-            textFieldText = ""
-            
-            Task {
-                do {
-                    generatedImage = try await aiManager.generateImage(input: content)
-                    
-                    title = content
-                } catch {
-                    print("Error generating image: \(error)")
-                }
-                isGenerating = false
-            }
-        } else {
-            showAlert = AnyAppAlert(title: "Please add at least 3 character")
-        }
-    }
 }
 
 #Preview {
     NavigationStack {
-        ImageGeneratorView()
+        ImageGeneratorView(viewModel: ImageGeneratorViewModel(interactor: CoreInteractor(container: DevPreview.shared.container)))
             .environment(AIManager(service: MockAIService()))
     }
 }

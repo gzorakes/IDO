@@ -8,6 +8,8 @@
 import SwiftUI
 
 
+
+
 @Observable
 @MainActor
 class CategoriesViewModel {
@@ -125,7 +127,7 @@ struct CategoriesView: View {
                 .navigationTitle("Categories")
                 .navigationBarTitleDisplayMode(.inline)
                 .navigationDestination(for: CategoryModel.self) { newValue in
-                    TodoListView(viewModel: TodoListViewModel(container: viewModel.container), category: newValue)
+                    TodoListView(viewModel: TodoListViewModel(interactor: CoreInteractor(container: viewModel.container)), category: newValue)
                 }
                 .toolbar {
                     ToolbarItem(placement: .topBarLeading) {
