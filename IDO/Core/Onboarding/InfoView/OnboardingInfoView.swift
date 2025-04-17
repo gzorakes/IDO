@@ -7,37 +7,25 @@
 
 import SwiftUI
 
+
 struct OnboardingInfoView: View {
     
-    @Environment(LogManager.self) private var logManager
-
-    @State private var selectedColor: Color?
-    @State private var name: String = ""
-    @State private var weddingDate: Date?
-    
-    var daysUntilWedding: Int? {
-        guard let weddingDate else { return nil }
-        let calendar = Calendar.current
-        let today = calendar.startOfDay(for: Date())
-        let weddingDay = calendar.startOfDay(for: weddingDate)
-        return calendar.dateComponents([.day], from: today, to: weddingDay).day
-    }
+    @State var viewModel: OnboardingInfoViewModel
+    @Environment(DependencyContainer.self) private var container
 
     var body: some View {
         List {
             Section("I am the...") {
                 HStack(spacing: 30) {
                     Spacer()
-                    rectangle(color: .customPink, name: "Bride", isSelected: selectedColor == .customPink)
+                    rectangle(color: .customPink, name: "Bride", isSelected: viewModel.selectedColor == .customPink)
                         .onTapGesture {
-                            selectedColor = .customPink
-                            logManager.trackEvent(event: Event.roleSelected(role: "Bride"))
+                            viewModel.onSelectRolePressed(color: .customPink, role: "Bride")
                         }
                     
-                    rectangle(color: .accent, name: "Groom", isSelected: selectedColor == .accent)
+                    rectangle(color: .accent, name: "Groom", isSelected: viewModel.selectedColor == .accent)
                         .onTapGesture {
-                            selectedColor = .accent
-                            logManager.trackEvent(event: Event.roleSelected(role: "Groom"))
+                            viewModel.onSelectRolePressed(color: .accent, role: "Groom")
                         }
                     Spacer()
                 }
@@ -45,18 +33,18 @@ struct OnboardingInfoView: View {
             .listRowBackground(Color.clear)
             
             Section("My name is...") {
-                TextField("Name", text: $name)
+                TextField("Name", text: $viewModel.name)
             }
             
             Section("I am getting married on...") {
                 DatePicker("Select Date", selection: Binding(
-                    get: { weddingDate ?? Date() },
-                    set: { weddingDate = $0 }
+                    get: { viewModel.weddingDate ?? Date() },
+                    set: { viewModel.weddingDate = $0 }
                 ), displayedComponents: .date)
                 .datePickerStyle(.compact)
             }
             
-            if let daysLeft = daysUntilWedding {
+            if let daysLeft = viewModel.daysUntilWedding {
                 Section {
                     Text(daysLeft < 0 ? "😱" : "\(daysLeft)")
                         .font(.title)
@@ -75,9 +63,13 @@ struct OnboardingInfoView: View {
         }
         .safeAreaInset(edge: .bottom, alignment: .center, spacing: 16, content: {
             ZStack {
-                if selectedColor != nil && !name.isEmpty && weddingDate != nil {
-                    ctaButton(selectedColor: selectedColor ?? .accent, name: name, daysUntilWedding: daysUntilWedding ?? 0)
-                        .disabled(daysUntilWedding ?? 0 <= 0)
+                if viewModel.selectedColor != nil && !viewModel.name.isEmpty && viewModel.weddingDate != nil {
+                    ctaButton(
+                        selectedColor: viewModel.selectedColor ?? .accent,
+                        name: viewModel.name,
+                        daysUntilWedding: viewModel.daysUntilWedding ?? 0
+                    )
+                    .disabled(viewModel.daysUntilWedding ?? 0 <= 0)
                 }
             }
             .padding(24)
@@ -96,45 +88,28 @@ struct OnboardingInfoView: View {
             }
             .overlay(
                 RoundedRectangle(cornerRadius: 12)
-                    .stroke(isSelected ? (selectedColor == .customPink ? .accent : .customPink) : .clear, lineWidth: 2)
+                    .stroke(isSelected ? (viewModel.selectedColor == .customPink ? .accent : .customPink) : .clear, lineWidth: 2)
             )
     }
     
     private func ctaButton(selectedColor: Color, name: String, daysUntilWedding: Int) -> some View {
         NavigationLink {
-            OnboardingCompletedView(selectedColor: selectedColor, name: name, weddingDate: weddingDate ?? .now, daysUntilWedding: daysUntilWedding)
+            OnboardingCompletedView(
+                viewModel: OnboardingCompletedViewModel(interactor: CoreInteractor(container: container)),
+                selectedColor: selectedColor,
+                name: name,
+                weddingDate: viewModel.weddingDate ?? .now,
+                daysUntilWedding: daysUntilWedding)
         } label: {
             Text("Continue")
                 .callToActionButton()
-        }
-    }
-    
-    enum Event: LoggableEvent {
-        case roleSelected(role: String)
-        
-        var eventName: String {
-            switch self {
-            case .roleSelected: return "Onboarding_Role_Selected"
-            }
-        }
-        
-        var parameters: [String: Any]? {
-            switch self {
-            case .roleSelected(let role):
-                return ["role": role]
-            }
-        }
-        
-        var type: LogType {
-            return .analytic
         }
     }
 }
 
 #Preview {
     NavigationStack {
-        OnboardingInfoView()
+        OnboardingInfoView(viewModel: OnboardingInfoViewModel(interactor: CoreInteractor(container: DevPreview.shared.container)))
     }
-    .environment(AppState())
     .previewEnvironment()
 }
