@@ -7,9 +7,12 @@
 
 import SwiftUI
 
+
 struct OnboardingIntroView: View {
     
+    @State var viewModel: OnboardingIntroViewModel
     @Environment(DependencyContainer.self) private var container
+    @Binding var path: [OnboardingPathOption]
     
     var body: some View {
         VStack {
@@ -35,12 +38,11 @@ struct OnboardingIntroView: View {
             .padding(24)
             .fontDesign(.rounded)
             
-            NavigationLink {
-                OnboardingInfoView(viewModel: OnboardingInfoViewModel(interactor: CoreInteractor(container: container)))
-            } label: {
-                Text("Continue")
-                    .callToActionButton()
-            }
+            Text("Continue")
+                .callToActionButton()
+                .anyButton(.press) {
+                    viewModel.onContinueButtonPressed(path: $path)
+                }
         }
         .padding(24)
         .font(.title3)
@@ -50,6 +52,9 @@ struct OnboardingIntroView: View {
 }
 
 #Preview {
-    OnboardingIntroView()
+    OnboardingIntroView(
+        viewModel: OnboardingIntroViewModel(interactor: CoreInteractor(container: DevPreview.shared.container)),
+        path: .constant([])
+    )
         .previewEnvironment()
 }

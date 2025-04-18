@@ -39,6 +39,11 @@ class OnboardingInfoViewModel {
         interactor.trackEvent(event: Event.roleSelected(role: role))
     }
     
+    func onContinuePressed(path: Binding<[OnboardingPathOption]>) {
+        guard let selectedColor, let weddingDate, let daysUntilWedding else { return }
+        path.wrappedValue.append(.completedView(selectedColor: selectedColor, name: name, weddingDate: weddingDate, daysUntilWedding: daysUntilWedding))
+    }
+    
     enum Event: LoggableEvent {
         case roleSelected(role: String)
         

@@ -12,6 +12,7 @@ struct OnboardingInfoView: View {
     
     @State var viewModel: OnboardingInfoViewModel
     @Environment(DependencyContainer.self) private var container
+    @Binding var path: [OnboardingPathOption]
 
     var body: some View {
         List {
@@ -93,23 +94,17 @@ struct OnboardingInfoView: View {
     }
     
     private func ctaButton(selectedColor: Color, name: String, daysUntilWedding: Int) -> some View {
-        NavigationLink {
-            OnboardingCompletedView(
-                viewModel: OnboardingCompletedViewModel(interactor: CoreInteractor(container: container)),
-                selectedColor: selectedColor,
-                name: name,
-                weddingDate: viewModel.weddingDate ?? .now,
-                daysUntilWedding: daysUntilWedding)
-        } label: {
-            Text("Continue")
-                .callToActionButton()
-        }
+        Text("Continue")
+            .callToActionButton()
+            .anyButton(.press) {
+                viewModel.onContinuePressed(path: $path)
+            }
     }
 }
 
 #Preview {
     NavigationStack {
-        OnboardingInfoView(viewModel: OnboardingInfoViewModel(interactor: CoreInteractor(container: DevPreview.shared.container)))
+        OnboardingInfoView(viewModel: OnboardingInfoViewModel(interactor: CoreInteractor(container: DevPreview.shared.container)), path: .constant([]))
     }
     .previewEnvironment()
 }

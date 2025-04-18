@@ -25,7 +25,7 @@ struct TodoListViewTests {
         container.register(TodoManager.self, service: todoManager)
         container.register(LogManager.self, service: logManager)
         
-        let viewModel = TodoListViewModel(container: container)
+        let viewModel = TodoListViewModel(interactor: CoreInteractor(container: container))
         let category: CategoryModel = .hall
         let filteredItems = todos.filter { $0.categoryId == category.rawValue }
         
@@ -46,7 +46,7 @@ struct TodoListViewTests {
         container.register(TodoManager.self, service: todoManager)
         container.register(LogManager.self, service: logManager)
         
-        let viewModel = TodoListViewModel(container: container)
+        let viewModel = TodoListViewModel(interactor: CoreInteractor(container: container))
         let category: CategoryModel = .hall
         let note = "Buy wedding flowers"
         
@@ -70,7 +70,7 @@ struct TodoListViewTests {
         container.register(TodoManager.self, service: todoManager)
         container.register(LogManager.self, service: logManager)
         
-        let viewModel = TodoListViewModel(container: container)
+        let viewModel = TodoListViewModel(interactor: CoreInteractor(container: container))
         viewModel.todoItems = TodoItemModel.mocks
         let originalItem = TodoItemModel.mocks[0]
         let updatedText = "Updated note content"
@@ -95,7 +95,7 @@ struct TodoListViewTests {
         container.register(TodoManager.self, service: todoManager)
         container.register(LogManager.self, service: logManager)
         
-        let viewModel = TodoListViewModel(container: container)
+        let viewModel = TodoListViewModel(interactor: CoreInteractor(container: container))
         viewModel.todoItems = TodoItemModel.mocks
         let itemToDelete = TodoItemModel.mocks[0]
         

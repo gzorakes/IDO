@@ -13,7 +13,7 @@ struct WelcomeView: View {
     @State var viewModel: WelcomeViewModel
     
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $viewModel.path) {
             VStack(spacing: 8.0) {
                 Image("welcomephoto")
                     .resizable()
@@ -29,6 +29,7 @@ struct WelcomeView: View {
                 
                 policyLinks
             }
+            .navigationDestinationForOnboardingModule(path: $viewModel.path)
         }
         .screenAppearAnalytics(name: "WelcomeView")
         .sheet(isPresented: $viewModel.showSignInView) {
@@ -62,12 +63,13 @@ struct WelcomeView: View {
     
     private var ctaButtons: some View {
         VStack {
-            NavigationLink {
-                OnboardingIntroView()
-            } label: {
-                Text("Get Started")
-                    .callToActionButton()
-            }
+            
+            Text("Get Started")
+                .callToActionButton()
+                .anyButton(.press) {
+                    viewModel.onGetStartedPressed()
+                }
+            
             Text("Already have an account? Sign in!")
                 .underline()
                 .font(.body)

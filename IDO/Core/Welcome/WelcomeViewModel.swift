@@ -19,9 +19,14 @@ class WelcomeViewModel {
     private let interactor: WelcomeInteractor
     
     var showSignInView: Bool = false
+    var path: [OnboardingPathOption] = []
     
     init(interactor: WelcomeInteractor) {
         self.interactor = interactor
+    }
+    
+    func onGetStartedPressed() {
+        path.append(.introView)
     }
     
     func handleDidSignIn(isNewUser: Bool, onShowTabBarView: () -> Void) {
