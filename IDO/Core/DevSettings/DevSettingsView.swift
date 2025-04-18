@@ -7,11 +7,10 @@
 
 import SwiftUI
 
+
 struct DevSettingsView: View {
     
-    @Environment(AuthManager.self) private var authManager
-    @Environment(UserManager.self) private var userManager
-
+    @State var viewModel: DevSettingsViewModel
     @Environment(\.dismiss) private var dismiss
     
     var body: some View {
@@ -43,8 +42,7 @@ struct DevSettingsView: View {
     
     private var authSection: some View {
         Section {
-            let array = authManager.auth?.eventParameters.map({ (key: $0, value: $1) }) ?? []
-            ForEach(array, id: \.key) { item in
+            ForEach(viewModel.authData, id: \.key) { item in
                 itemRow(item: item)
             }
         } header: {
@@ -54,8 +52,7 @@ struct DevSettingsView: View {
     
     private var userSection: some View {
         Section {
-            let array = userManager.currentUser?.eventParameters.map({ (key: $0, value: $1) }) ?? []
-            ForEach(array, id: \.key) { item in
+            ForEach(viewModel.userData, id: \.key) { item in
                 itemRow(item: item)
             }
         } header: {
@@ -65,8 +62,7 @@ struct DevSettingsView: View {
     
     private var deviceSection: some View {
         Section {
-            let array = Utilities.eventParameters.map({ (key: $0, value: $1) })
-            ForEach(array, id: \.key) { item in
+            ForEach(viewModel.utilitiesData, id: \.key) { item in
                 itemRow(item: item)
             }
         } header: {
@@ -93,6 +89,6 @@ struct DevSettingsView: View {
 }
 
 #Preview {
-    DevSettingsView()
+    DevSettingsView(viewModel: DevSettingsViewModel(interactor: CoreInteractor(container: DevPreview.shared.container)))
         .previewEnvironment()
 }

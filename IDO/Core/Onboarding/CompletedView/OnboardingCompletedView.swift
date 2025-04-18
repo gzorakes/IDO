@@ -11,7 +11,6 @@ import SwiftUI
 struct OnboardingCompletedView: View {
     
     @State var viewModel: OnboardingCompletedViewModel
-    @Environment(AppState.self) private var appState
 
     var selectedColor: Color
     var name: String
@@ -43,9 +42,7 @@ struct OnboardingCompletedView: View {
     
     private var ctaButton: some View {
         Button {
-            viewModel.onFinishButtonPressed(selectedColor: selectedColor, name: name, weddingDate: weddingDate, onShowTabbarView: {
-                appState.updateViewState(showTabBarView: true)
-            })
+            viewModel.onFinishButtonPressed(selectedColor: selectedColor, name: name, weddingDate: weddingDate)
         } label: {
             ZStack {
                 if viewModel.isCompletingProfileSetup {

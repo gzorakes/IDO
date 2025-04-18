@@ -17,6 +17,7 @@ protocol AccountInteractor {
     func deleteCurrentUser() async throws
     func trackEvent(event: LoggableEvent)
     func deleteUserProfile()
+    func updateAppState(showTabBarView: Bool)
 }
 
 extension CoreInteractor: AccountInteractor { }
@@ -46,6 +47,7 @@ class AccountViewModel {
             do {
                 try interactor.signOut()
                 await onDismiss()
+                interactor.updateAppState(showTabBarView: false)
             } catch {
                 interactor.trackEvent(event: Event.signOutFailed(error: error))
                 showAlert = AnyAppAlert(error: error)
@@ -76,6 +78,7 @@ class AccountViewModel {
                 try await interactor.deleteAccount()
                 interactor.deleteUserProfile()
                 await onDismiss()
+                interactor.updateAppState(showTabBarView: false)
             } catch {
                 interactor.trackEvent(event: Event.deleteAccountFailed(error: error))
                 showAlert = AnyAppAlert(error: error)

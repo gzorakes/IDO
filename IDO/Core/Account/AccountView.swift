@@ -11,7 +11,6 @@ import SwiftfulUtilities
 struct AccountView: View {
     
     @Environment(\.dismiss) private var dismiss
-    @Environment(AppState.self) private var appState
     @Environment(DependencyContainer.self) private var container
     @State var viewModel: AccountViewModel
 
@@ -174,7 +173,6 @@ struct AccountView: View {
     private func dismissScreen() async {
         dismiss()
         try? await Task.sleep(for: .seconds(1))
-        appState.updateViewState(showTabBarView: false)
     }
 }
 

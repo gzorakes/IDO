@@ -39,7 +39,7 @@ struct CategoriesView: View {
                     pushNotificationModal
                 })
                 .sheet(isPresented: $viewModel.showDevSettings) {
-                    DevSettingsView()
+                    DevSettingsView(viewModel: DevSettingsViewModel(interactor: CoreInteractor(container: container)))
                 }
                 .task {
                     await viewModel.handleShowPushNotificationsButton()

@@ -10,6 +10,7 @@ import SwiftUI
 @MainActor
 protocol AppViewInteractor {
     var auth: UserAuthInfo? { get }
+    var showTabBar: Bool { get }
     
     func trackEvent(event: LoggableEvent)
     func signInAnonymously() async throws -> (user: UserAuthInfo, isNewUser: Bool)
@@ -22,6 +23,9 @@ extension CoreInteractor: AppViewInteractor { }
 @MainActor
 class AppViewModel {
     private let interactor: AppViewInteractor
+    var showTabBar: Bool {
+        interactor.showTabBar
+    }
     
     init(interactor: AppViewInteractor) {
         self.interactor = interactor
