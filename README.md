@@ -34,3 +34,8 @@ iOS application to simplify wedding planning by organizing tasks, vendors, and n
 - Automated `CI` through Xcode Cloud for code quality maintenance
 
 Make sure to configure your Firebase project and update any necessary API keys or the GoogleService-Info.plist file before running the app.
+
+## 📄 License
+
+This project is licensed under the MIT License.  
+See the [LICENSE](LICENSE) file for details.
