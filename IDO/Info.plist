@@ -4,7 +4,5 @@
 <dict>
 	<key>FirebaseAutomaticScreenReportingEnabled</key>
 	<false/>
-	<key>ITSAppUsesNonExemptEncryption</key>
-	<false/>
 </dict>
 </plist>
