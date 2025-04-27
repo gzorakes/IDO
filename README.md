@@ -23,7 +23,6 @@ iOS application to simplify wedding planning by organizing tasks, vendors, and n
 - Concurrency: Swift `Concurrency`
 - Local Storage: `SwiftData`, `UserDefaults`
 - Backend: `Firebase`
-- Dependency Management: Swift Packages
 - Testing: `Unit Tests`, `UI Tests`
 - CI/CD: `Xcode Cloud`
 
